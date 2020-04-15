@@ -1,7 +1,11 @@
 //Package flags is a wrapper for the default flag package. All types and functions allow checking if a flag was set.
+//
 //Example:
+//
 //flags.Bool("local", false, "")
+//
 //flag.Parse()
+//
 //flag.Lookup("local").Value.(*flags.IntType).IsSet()
 package flags
 
@@ -11,7 +15,7 @@ import (
 	"strconv"
 )
 
-// Bool creates bool flag
+// Bool defines a bool flag with specified name, default value, and usage string.
 func Bool(name string, value bool, usage string) {
 	v := BoolValue{
 		set:   false,
@@ -20,7 +24,7 @@ func Bool(name string, value bool, usage string) {
 	flag.Var(&v, name, usage)
 }
 
-// Float64 creates float64 flag
+// Float64 defines a float64 flag with specified name, default value, and usage string.
 func Float64(name string, value float64, usage string) {
 	v := Float64Value{
 		set:   false,
@@ -30,7 +34,7 @@ func Float64(name string, value float64, usage string) {
 	flag.Var(&v, name, usage)
 }
 
-// Int creates int flag
+// Int defines a int flag with specified name, default value, and usage string.
 func Int(name string, value int, usage string) {
 	v := IntValue{
 		set:   false,
@@ -40,7 +44,7 @@ func Int(name string, value int, usage string) {
 	flag.Var(&v, name, usage)
 }
 
-// Int64 creates int64 flag
+// Int64 defines a int64 flag with specified name, default value, and usage string.
 func Int64(name string, value int64, usage string) {
 	v := Int64Value{
 		set:   false,
@@ -50,7 +54,7 @@ func Int64(name string, value int64, usage string) {
 	flag.Var(&v, name, usage)
 }
 
-// String creates string flag
+// String defines a string flag with specified name, default value, and usage string.
 func String(name string, value string, usage string) {
 	v := StringValue{
 		set:   false,
@@ -60,7 +64,7 @@ func String(name string, value string, usage string) {
 	flag.Var(&v, name, usage)
 }
 
-// Uint creates uint flag
+// Uint defines a uint flag with specified name, default value, and usage string.
 func Uint(name string, value uint, usage string) {
 	v := UintValue{
 		set:   false,
@@ -70,7 +74,7 @@ func Uint(name string, value uint, usage string) {
 	flag.Var(&v, name, usage)
 }
 
-// Uint64 creates uint64 flag
+// Uint64 defines a uint64 flag with specified name, default value, and usage string.
 func Uint64(name string, value uint64, usage string) {
 	v := Uint64Value{
 		set:   false,
