@@ -2,7 +2,7 @@ package parameters
 
 import (
 	"flag"
-	fl "github.com/barchart/barchart-common-go/pkg/parameters/flags"
+	fl "github.com/barchart/common-go/pkg/parameters/flags"
 	"os"
 	"strconv"
 )

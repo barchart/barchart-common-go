@@ -3,9 +3,9 @@ package parameters
 import (
 	"flag"
 	"fmt"
-	"github.com/barchart/barchart-common-go/pkg/configuration"
-	"github.com/barchart/barchart-common-go/pkg/configuration/aws/secretsmanager"
-	"github.com/barchart/barchart-common-go/pkg/parameters/flags"
+	"github.com/barchart/common-go/pkg/configuration"
+	"github.com/barchart/common-go/pkg/configuration/aws/secretsmanager"
+	"github.com/barchart/common-go/pkg/parameters/flags"
 	"os"
 	"strings"
 )

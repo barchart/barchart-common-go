@@ -1,8 +1,8 @@
 package configuration
 
 import (
-	. "github.com/barchart/barchart-common-go/pkg/configuration/aws"
-	. "github.com/barchart/barchart-common-go/pkg/configuration/database"
+	. "github.com/barchart/common-go/pkg/configuration/aws"
+	. "github.com/barchart/common-go/pkg/configuration/database"
 )
 
 // Databases is a slice of Database

@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"github.com/barchart/barchart-common-go/pkg/validation"
+	"github.com/barchart/common-go/pkg/validation"
 )
 
 var validate = validation.GetValidator()
