@@ -10,4 +10,5 @@ const (
 	uint64Type  = "uint64"
 )
 
+// AwsRegionSecrets is the constant name of AwsRegionSecrets flag or env variable
 const AwsRegionSecrets = "AWS-REGION-SECRETS"

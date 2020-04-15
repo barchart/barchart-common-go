@@ -9,6 +9,7 @@ import (
 	"github.com/barchart/barchart-common-go/pkg/configuration/aws/sqs"
 )
 
+// AWS is a type of AWS configuration
 type AWS struct {
 	Dynamo         *map[string]dynamo.Dynamo
 	SNS            *map[string]sns.SNS

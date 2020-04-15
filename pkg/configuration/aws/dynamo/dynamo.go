@@ -2,16 +2,18 @@ package dynamo
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
-import "github.com/aws/aws-sdk-go/aws/session"
 
+// Dynamo is a type of DynamoDB configuration
 type Dynamo struct {
 	Prefix string `validate:"required"`
 	Region string `validate:"required"`
 }
 
-func (d Dynamo) NewDynamo() *dynamodb.DynamoDB {
+// New creates a new instance of AWS DynamoDB
+func (d Dynamo) New() *dynamodb.DynamoDB {
 	mySession := session.Must(session.NewSession())
 	dynamo := dynamodb.New(mySession, aws.NewConfig().WithRegion(d.Region))
 

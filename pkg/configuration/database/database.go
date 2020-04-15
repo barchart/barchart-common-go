@@ -18,17 +18,17 @@ type Database struct {
 	Password string `validate:"required"`
 }
 
-// GetConnectionURL returns connection string in format: provider://user:password@host:port/database
-func (database Database) GetConnectionURL() string {
-	return fmt.Sprintf("%s://%s:%s@%s:%d/%s", database.Provider, database.User, database.Password, database.Host, database.Port, database.Database)
-}
-
 // GetConnectionString returns connection string in format: user=? password=? host=? port=? dbname=?
 func (database Database) GetConnectionString() string {
 	return fmt.Sprintf("user=%s password=%s host=%s port=%d dbname=%s", database.User, database.Password, database.Host, database.Port, database.Database)
 }
 
-// OpenDB return database instance for configuration
+// GetConnectionURL returns connection string in format: provider://user:password@host:port/database
+func (database Database) GetConnectionURL() string {
+	return fmt.Sprintf("%s://%s:%s@%s:%d/%s", database.Provider, database.User, database.Password, database.Host, database.Port, database.Database)
+}
+
+// OpenDB return *sql.DB instance
 func (database Database) OpenDB() (*sql.DB, error) {
 	err := validate.Struct(database)
 

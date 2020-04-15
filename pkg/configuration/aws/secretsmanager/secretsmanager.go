@@ -12,23 +12,27 @@ import (
 	"log"
 )
 
+// cache is a type of cache system of Secrets Manager
 type cache struct {
 	Value  string
 	isJSON bool
 }
 
+// SecretsManager is a type of AWS Secrets Manager configuration and provider
 type SecretsManager struct {
 	Region string `validate:"required"`
 	sm     *secretsmanager.SecretsManager
 	cache  map[string]cache
 }
 
+// isStringJSON returns true/false if the provided string is JSON
 func isStringJSON(str string) bool {
 	var jsonStr map[string]interface{}
 	err := json.Unmarshal([]byte(str), &jsonStr)
 	return err == nil
 }
 
+// New creates new AWS Secrets Manager instance
 func New(region string) *SecretsManager {
 	secretsManager := SecretsManager{}
 	secretsManager.Region = region
@@ -48,10 +52,12 @@ func New(region string) *SecretsManager {
 	return &secretsManager
 }
 
+// ClearCache is clears cache of Secrets Manager
 func (secretsManager SecretsManager) ClearCache() {
 	secretsManager.cache = map[string]cache{}
 }
 
+// GetValue returns value from AWS Secrets Manager
 func (secretsManager SecretsManager) GetValue(secretName string) (string, bool, error) {
 	cached := secretsManager.cache[secretName]
 	if cached.Value != "" {

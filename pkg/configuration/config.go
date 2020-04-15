@@ -57,26 +57,29 @@ func InitConfigFromFile(path string, name string) (*Config, error) {
 	return &config, nil
 }
 
-// GetConfig returns instance of type Config
+// region Getters
+
+// GetConfig returns instance of the Config
 func GetConfig() *Config {
 	return &config
 }
 
-// GetSecretsManager returns
-func (cfg *Config) GetSecretsManager() (secretsmanager.SecretsManager, error) {
-	if cfg.AWS == nil || cfg.AWS.SecretsManager == nil {
-		return secretsmanager.SecretsManager{}, errors.New("secrets manager configuration hasn't been set")
+// GetCustomSettings returns the Custom Settings
+func (cfg Config) GetCustomSettingsByKey(key string) (interface{}, error) {
+	if cfg.CustomSettings == nil {
+		cfg.CustomSettings = map[string]interface{}{}
 	}
 
-	return *cfg.AWS.SecretsManager, nil
+	cs, ok := cfg.CustomSettings[key]
+
+	if !ok {
+		return nil, errors.New("custom settings [ " + key + " ] not found")
+	}
+
+	return cs, nil
 }
 
-// GetStage returns current stage
-func (cfg Config) GetStage() string {
-	return cfg.Stage
-}
-
-// GetDB returns to Database configuration by key
+// GetDB returns Database configuration by key
 func (cfg Config) GetDB(key string) (Database, error) {
 	if cfg.Databases == nil {
 		cfg.Databases = Databases{}
@@ -92,87 +95,7 @@ func (cfg Config) GetDB(key string) (Database, error) {
 	}
 }
 
-// GetSNS returns to the SNS configuration by key
-func (cfg Config) GetSNS(key string) (SNS, error) {
-	if cfg.AWS == nil {
-		cfg.AWS = &AWS{}
-	}
-
-	if cfg.AWS.SNS == nil {
-		cfg.AWS.SNS = &map[string]SNS{}
-	}
-
-	snsList := *cfg.AWS.SNS
-
-	if sns, ok := snsList[key]; ok {
-		return sns, nil
-	} else {
-		err := fmt.Sprintf("AWS SNS [ %v ] configuration not found", key)
-		return SNS{}, errors.New(err)
-	}
-}
-
-// GetSQS returns to the SQS configuration by key
-func (cfg Config) GetSQS(key string) (SQS, error) {
-	if cfg.AWS == nil {
-		cfg.AWS = &AWS{}
-	}
-
-	if cfg.AWS.SQS == nil {
-		cfg.AWS.SQS = &map[string]SQS{}
-	}
-
-	sqsList := *cfg.AWS.SQS
-
-	if sqs, ok := sqsList[key]; ok {
-		return sqs, nil
-	} else {
-		err := fmt.Sprintf("AWS SQS [ %v ] configuration not found", key)
-		return SQS{}, errors.New(err)
-	}
-}
-
-// GetSES returns to the SES configuration by key
-func (cfg Config) GetSES(key string) (SES, error) {
-	if cfg.AWS == nil {
-		cfg.AWS = &AWS{}
-	}
-
-	if cfg.AWS.SES == nil {
-		cfg.AWS.SES = &map[string]SES{}
-	}
-
-	sesList := *cfg.AWS.SES
-
-	if ses, ok := sesList[key]; ok {
-		return ses, nil
-	} else {
-		err := fmt.Sprintf("AWS SES [ %v ] configuration not found", key)
-		return SES{}, errors.New(err)
-	}
-}
-
-// GetS3 returns to the S3 configuration by key
-func (cfg Config) GetS3(key string) (S3, error) {
-	if cfg.AWS == nil {
-		cfg.AWS = &AWS{}
-	}
-
-	if cfg.AWS.S3 == nil {
-		cfg.AWS.S3 = &map[string]S3{}
-	}
-
-	s3List := *cfg.AWS.S3
-
-	if s3, ok := s3List[key]; ok {
-		return s3, nil
-	} else {
-		err := fmt.Sprintf("AWS S3 [ %v ] configuration not found", key)
-		return S3{}, errors.New(err)
-	}
-}
-
-// GetDynamo returns to the Dynamo configuration by key
+// GetDynamo returns the Dynamo configuration by key
 func (cfg Config) GetDynamo(key string) (Dynamo, error) {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
@@ -192,19 +115,111 @@ func (cfg Config) GetDynamo(key string) (Dynamo, error) {
 	}
 }
 
-// GetCustomSettings return to the Custom Settings
-func (cfg Config) GetCustomSettingsByKey(key string) (interface{}, error) {
+// GetS3 returns the S3 configuration by key
+func (cfg Config) GetS3(key string) (S3, error) {
+	if cfg.AWS == nil {
+		cfg.AWS = &AWS{}
+	}
+
+	if cfg.AWS.S3 == nil {
+		cfg.AWS.S3 = &map[string]S3{}
+	}
+
+	s3List := *cfg.AWS.S3
+
+	if s3, ok := s3List[key]; ok {
+		return s3, nil
+	} else {
+		err := fmt.Sprintf("AWS S3 [ %v ] configuration not found", key)
+		return S3{}, errors.New(err)
+	}
+}
+
+// GetSES returns the SES configuration by key
+func (cfg Config) GetSES(key string) (SES, error) {
+	if cfg.AWS == nil {
+		cfg.AWS = &AWS{}
+	}
+
+	if cfg.AWS.SES == nil {
+		cfg.AWS.SES = &map[string]SES{}
+	}
+
+	sesList := *cfg.AWS.SES
+
+	if ses, ok := sesList[key]; ok {
+		return ses, nil
+	} else {
+		err := fmt.Sprintf("AWS SES [ %v ] configuration not found", key)
+		return SES{}, errors.New(err)
+	}
+}
+
+// GetSNS returns the SNS configuration by key
+func (cfg Config) GetSNS(key string) (SNS, error) {
+	if cfg.AWS == nil {
+		cfg.AWS = &AWS{}
+	}
+
+	if cfg.AWS.SNS == nil {
+		cfg.AWS.SNS = &map[string]SNS{}
+	}
+
+	snsList := *cfg.AWS.SNS
+
+	if sns, ok := snsList[key]; ok {
+		return sns, nil
+	} else {
+		err := fmt.Sprintf("AWS SNS [ %v ] configuration not found", key)
+		return SNS{}, errors.New(err)
+	}
+}
+
+// GetSQS returns the SQS configuration by key
+func (cfg Config) GetSQS(key string) (SQS, error) {
+	if cfg.AWS == nil {
+		cfg.AWS = &AWS{}
+	}
+
+	if cfg.AWS.SQS == nil {
+		cfg.AWS.SQS = &map[string]SQS{}
+	}
+
+	sqsList := *cfg.AWS.SQS
+
+	if sqs, ok := sqsList[key]; ok {
+		return sqs, nil
+	} else {
+		err := fmt.Sprintf("AWS SQS [ %v ] configuration not found", key)
+		return SQS{}, errors.New(err)
+	}
+}
+
+// GetSecretsManager returns SecretManager configuration
+func (cfg *Config) GetSecretsManager() (secretsmanager.SecretsManager, error) {
+	if cfg.AWS == nil || cfg.AWS.SecretsManager == nil {
+		return secretsmanager.SecretsManager{}, errors.New("secrets manager configuration hasn't been set")
+	}
+
+	return *cfg.AWS.SecretsManager, nil
+}
+
+// GetStage returns current stage
+func (cfg Config) GetStage() string {
+	return cfg.Stage
+}
+
+// endregion Getters
+
+// region Setters
+
+// SetCustomSettings sets the Custom Setting
+func (cfg *Config) SetCustomSettings(key string, cs interface{}) {
 	if cfg.CustomSettings == nil {
 		cfg.CustomSettings = map[string]interface{}{}
 	}
 
-	cs, ok := cfg.CustomSettings[key]
-
-	if !ok {
-		return nil, errors.New("custom settings [ " + key + " ] not found")
-	}
-
-	return cs, nil
+	cfg.CustomSettings[key] = cs
 }
 
 // SetDB sets the Database configuration
@@ -230,6 +245,91 @@ func (cfg *Config) SetDB(key string, provider string, host string, port int, dat
 	Databases := cfg.Databases
 
 	Databases[key] = db
+
+	return nil
+}
+
+// SetDynamo sets the Dynamo configuration
+func (cfg *Config) SetDynamo(key string, region string, prefix string) error {
+	if cfg.AWS == nil {
+		cfg.AWS = &AWS{}
+	}
+
+	if cfg.AWS.Dynamo == nil {
+		cfg.AWS.Dynamo = &map[string]Dynamo{}
+	}
+
+	dynamo := Dynamo{
+		Prefix: prefix,
+		Region: region,
+	}
+
+	err := validate.Struct(dynamo)
+
+	if err != nil {
+		return err
+	}
+
+	dynamoList := *cfg.AWS.Dynamo
+
+	dynamoList[key] = dynamo
+
+	return nil
+}
+
+// SetS3 sets the S3 configuration
+func (cfg *Config) SetS3(key string, region string, bucket string) error {
+	if cfg.AWS == nil {
+		cfg.AWS = &AWS{}
+	}
+
+	if cfg.AWS.S3 == nil {
+		cfg.AWS.S3 = &map[string]S3{}
+	}
+
+	s3 := S3{
+		Region: region,
+		Bucket: bucket,
+	}
+
+	err := validate.Struct(s3)
+
+	if err != nil {
+		return err
+	}
+
+	s3List := *cfg.AWS.S3
+
+	s3List[key] = s3
+
+	return nil
+}
+
+// SetSES sets the SES configuration
+func (cfg *Config) SetSES(key string, region string, from string, domain string) error {
+	if cfg.AWS == nil {
+		cfg.AWS = &AWS{}
+	}
+
+	if cfg.AWS.SES == nil {
+		cfg.AWS.SES = &map[string]SES{}
+	}
+
+	ses := SES{
+		From:   from,
+		Region: region,
+		Domain: domain,
+	}
+
+	err := validate.Struct(ses)
+
+	if err != nil {
+		return err
+	}
+
+	sesList := *cfg.AWS.SES
+
+	sesList[key] = ses
 
 	return nil
 }
@@ -292,105 +392,7 @@ func (cfg *Config) SetSQS(key string, region string, prefix string, queue string
 	return nil
 }
 
-// SetSES sets the SES configuration
-func (cfg *Config) SetSES(key string, region string, from string, domain string) error {
-	if cfg.AWS == nil {
-		cfg.AWS = &AWS{}
-	}
-
-	if cfg.AWS.SES == nil {
-		cfg.AWS.SES = &map[string]SES{}
-	}
-
-	ses := SES{
-		From:   from,
-		Region: region,
-		Domain: domain,
-	}
-
-	err := validate.Struct(ses)
-
-	if err != nil {
-		return err
-	}
-
-	sesList := *cfg.AWS.SES
-
-	sesList[key] = ses
-
-	return nil
-}
-
-// SetS3 sets the S3 configuration
-func (cfg *Config) SetS3(key string, region string, bucket string) error {
-	if cfg.AWS == nil {
-		cfg.AWS = &AWS{}
-	}
-
-	if cfg.AWS.S3 == nil {
-		cfg.AWS.S3 = &map[string]S3{}
-	}
-
-	s3 := S3{
-		Region: region,
-		Bucket: bucket,
-	}
-
-	err := validate.Struct(s3)
-
-	if err != nil {
-		return err
-	}
-
-	s3List := *cfg.AWS.S3
-
-	s3List[key] = s3
-
-	return nil
-}
-
-// SetDynamo sets the Dynamo configuration
-func (cfg *Config) SetDynamo(key string, region string, prefix string) error {
-	if cfg.AWS == nil {
-		cfg.AWS = &AWS{}
-	}
-
-	if cfg.AWS.Dynamo == nil {
-		cfg.AWS.Dynamo = &map[string]Dynamo{}
-	}
-
-	dynamo := Dynamo{
-		Prefix: prefix,
-		Region: region,
-	}
-
-	err := validate.Struct(dynamo)
-
-	if err != nil {
-		return err
-	}
-
-	dynamoList := *cfg.AWS.Dynamo
-
-	dynamoList[key] = dynamo
-
-	return nil
-}
-
-// SetCustomSettings sets the Custom Setting
-func (cfg *Config) SetCustomSettings(key string, cs interface{}) {
-	if cfg.CustomSettings == nil {
-		cfg.CustomSettings = map[string]interface{}{}
-	}
-
-	cfg.CustomSettings[key] = cs
-}
-
-// SetStage sets the current stage
-func (cfg *Config) SetStage(stage string) {
-	cfg.Stage = stage
-}
-
+// SetSecretsManager creates a Secrets Manager instance and sets it into the instance of the configuration
 func (cfg *Config) SetSecretsManager(region string) {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
@@ -398,3 +400,10 @@ func (cfg *Config) SetSecretsManager(region string) {
 
 	cfg.AWS.SecretsManager = secretsmanager.New(region)
 }
+
+// SetStage sets the current stage
+func (cfg *Config) SetStage(stage string) {
+	cfg.Stage = stage
+}
+
+// endregion Setters

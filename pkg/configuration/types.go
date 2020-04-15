@@ -5,6 +5,7 @@ import (
 	. "github.com/barchart/barchart-common-go/pkg/configuration/database"
 )
 
+// Databases is a slice of Database
 type Databases map[string]Database
 
 // Config is a type of configuration
