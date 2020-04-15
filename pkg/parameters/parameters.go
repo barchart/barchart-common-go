@@ -6,7 +6,6 @@ import (
 	"github.com/barchart/barchart-common-go/pkg/configuration"
 	"github.com/barchart/barchart-common-go/pkg/configuration/aws/secretsmanager"
 	"github.com/barchart/barchart-common-go/pkg/parameters/flags"
-	"log"
 	"os"
 	"strings"
 )
@@ -165,24 +164,20 @@ func (p parameters) Parse() map[string]interface{} {
 			envValueString := os.Getenv(param.Name)
 			if envValueString != "" {
 				envValue := convertString(envValueString, param.valueType)
-				log.Printf("PARAM: %v: %T", param.Name, envValue)
 				result[param.Name] = envValue
 			} else {
 				secretValue := getValueFromAWSSecretsManager(param)
 				if secretValue != nil {
-					log.Printf("PARAM: %v: %T", param.Name, secretValue)
 					result[param.Name] = secretValue
 				} else {
 					if param.Required {
 						missing = append(missing, param.Name)
 					} else {
-						log.Printf("PARAM: %v: %T", param.Name, value)
 						result[param.Name] = value
 					}
 				}
 			}
 		} else {
-			log.Printf("PARAM: %v: %T", param.Name, value)
 			result[param.Name] = value
 		}
 	}
