@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/barchart/barchart-common-go/pkg/configuration"
-	_ "github.com/barchart/barchart-common-go/pkg/configuration"
 	"github.com/barchart/barchart-common-go/pkg/configuration/aws/secretsmanager"
 	"github.com/barchart/barchart-common-go/pkg/parameters/flags"
 	"log"
