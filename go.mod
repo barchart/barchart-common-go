@@ -1,4 +1,4 @@
-module github.com/barchart/barchart-common-go
+module github.com/barchart/common-go
 
 go 1.14
 
