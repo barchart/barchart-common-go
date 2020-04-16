@@ -17,20 +17,18 @@ import (
 	"os"
 )
 
-var config Config
 var stage string
 var validate = validation.GetValidator()
 
-func init() {
-	config = Config{
-		CustomSettings: map[string]interface{}{},
-	}
+var config = Config{
+	CustomSettings: map[string]interface{}{},
 }
 
 // InitConfigFromFile reads configuration from file and return config
-func InitConfigFromFile(path string, name string) (*Config, error) {
-	viper.AddConfigPath(path)
-	viper.SetConfigName(name)
+func (cfg *Config) InitConfigFromFile(path string, name string) (*Config, error) {
+	vip := viper.New()
+	vip.AddConfigPath(path)
+	vip.SetConfigName(name)
 
 	stage = os.Getenv("APP_ENV")
 
@@ -38,31 +36,139 @@ func InitConfigFromFile(path string, name string) (*Config, error) {
 		stage = "dev"
 	}
 
-	err := viper.ReadInConfig()
+	err := vip.ReadInConfig()
 
 	if err != nil {
 		errText := fmt.Sprintf("unable to read config file, %v", err)
 		return nil, errors.New(errText)
 	}
 
-	err = viper.UnmarshalKey(stage, &config)
+	err = vip.UnmarshalKey(stage, &cfg)
 
 	if err != nil {
 		errText := fmt.Sprintf("unable to decode into config struct, %v", err)
 		return nil, errors.New(errText)
 	}
 
-	config.Stage = stage
+	cfg.Stage = stage
 
-	return &config, nil
+	return cfg, nil
 }
+
+// InitConfigFromFile reads configuration from file and return config
+func InitConfigFromFile(path string, name string) (*Config, error) {
+	return config.InitConfigFromFile(path, name)
+}
+
+// Creates new instance of configuration
+func New() *Config {
+	return &Config{
+		Databases:      nil,
+		AWS:            nil,
+		CustomSettings: map[string]interface{}{},
+		Stage:          "",
+	}
+}
+
+// region Singleton Getters
+
+// GetCustomSettings returns the Custom Settings
+func GetCustomSettingsByKey(key string) (interface{}, error) {
+	return config.GetCustomSettingsByKey(key)
+}
+
+// GetDB returns Database configuration by key
+func GetDB(key string) (Database, error) {
+	return config.GetDB(key)
+}
+
+// GetDynamo returns the Dynamo configuration by key
+func GetDynamo(key string) (Dynamo, error) {
+	return config.GetDynamo(key)
+}
+
+// GetS3 returns the S3 configuration by key
+func GetS3(key string) (S3, error) {
+	return config.GetS3(key)
+}
+
+// GetSES returns the SES configuration by key
+func GetSES(key string) (SES, error) {
+	return config.GetSES(key)
+}
+
+// GetSNS returns the SNS configuration by key
+func GetSNS(key string) (SNS, error) {
+	return config.GetSNS(key)
+}
+
+// GetSQS returns the SQS configuration by key
+func GetSQS(key string) (SQS, error) {
+	return config.GetSQS(key)
+}
+
+// GetSecretsManager returns SecretManager configuration
+func GetSecretsManager() (secretsmanager.SecretsManager, error) {
+	return config.GetSecretsManager()
+}
+
+// GetStage returns current stage
+func GetStage() string {
+	return config.GetStage()
+}
+
+// endregion Getters
+
+// region Singleton setters
+
+// SetCustomSettings sets the Custom Setting
+func SetCustomSettings(key string, cs interface{}) {
+	config.SetCustomSettings(key, cs)
+}
+
+// SetDB sets the Database configuration
+func SetDB(key string, provider string, host string, port int, database string, user string, password string) error {
+	return config.SetDB(key, provider, host, port, database, user, password)
+}
+
+// SetDynamo sets the Dynamo configuration
+func SetDynamo(key string, region string, prefix string) error {
+	return config.SetDynamo(key, region, prefix)
+}
+
+// SetS3 sets the S3 configuration
+func SetS3(key string, region string, bucket string) error {
+	return config.SetS3(key, region, bucket)
+}
+
+// SetSES sets the SES configuration
+func SetSES(key string, region string, from string, domain string) error {
+	return config.SetSES(key, region, from, domain)
+}
+
+// SetSNS sets the SNS configuration
+func SetSNS(key string, region string, topic string, prefix string) error {
+	return config.SetSNS(key, region, topic, prefix)
+}
+
+// SetSQS sets the SQS configuration
+func SetSQS(key string, region string, prefix string, queue string) error {
+	return config.SetSQS(key, region, prefix, queue)
+}
+
+// SetSecretsManager creates a Secrets Manager instance and sets it into the instance of the configuration
+func SetSecretsManager(region string) {
+	config.SetSecretsManager(region)
+}
+
+// SetStage sets the current stage
+func SetStage(stage string) {
+	config.SetStage(stage)
+}
+
+// endregion Setters
 
 // region Getters
-
-// GetConfig returns instance of the Config
-func GetConfig() *Config {
-	return &config
-}
 
 // GetCustomSettings returns the Custom Settings
 func (cfg Config) GetCustomSettingsByKey(key string) (interface{}, error) {
