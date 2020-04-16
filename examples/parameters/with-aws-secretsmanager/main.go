@@ -28,7 +28,7 @@ func main() {
 
 	// This secret doesn't exist and the required attribute is true.
 	// If the flag or environment variable wasn't provided, the value should be the default.
-	params.Add("EXAMPLE_SECRET_DOEST_EXIST", "default value", "", false, true)
+	params.Add("EXAMPLE_SECRET_DOES_NOT_EXIST", "default value", "", false, true)
 
 	// Parse all parameters. Will get value from flags, environment variables and AWS Secrets Manager.
 	// params.Parse executes flag.Parse() under the hood. DON'T USE flag.parse()

@@ -144,6 +144,10 @@ func (p parameters) Parse() map[string]interface{} {
 
 	flags.String(AwsRegionSecrets, "us-east-1", "The AWS Secrets Manager region")
 
+	if flag.Parsed() {
+		panic("flags have already parsed")
+	}
+
 	flag.Parse()
 
 	config := configuration.GetConfig()
