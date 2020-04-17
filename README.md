@@ -6,7 +6,7 @@ A *public* library of shared GoLang utilities.
 
 #### Features 
   
-* [Parameters](./pkg/parameters) - Pattern for accepting arguments for a program (e.g. flags, environment, AWS Secrets Manager)
+* [Parameters](./pkg/parameters) - Pattern for accepting program arguments (e.g. flags, environment, AWS Secrets Manager)
 * [Configuration](./pkg/configuration) - Pattern for storing configuration data (e.g. database connection)
 * [Validation](./pkg/validation)
 
