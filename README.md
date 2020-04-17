@@ -1,10 +1,23 @@
+# @barchart/common-go
+    
+A *public* library of shared GoLang utilities.
+  
+### Overview
 
-# common-go  
+#### Features 
   
-Public shared library of utilities for Go (GoLang)  
-  
-## Libraries  
-  
-  - [Parameters](./pkg/parameters/README.md)
-  - [Configuration](./pkg/configuration/README.md)
-  - [Validation](./pkg/validation/README.md)
+* [Parameters](./pkg/parameters) - Pattern for accepting arguments for a program (e.g. flags, environment, AWS Secrets Manager)
+* [Configuration](./pkg/configuration) - Pattern for storing configuration data (e.g. database connection)
+* [Validation](./pkg/validation)
+
+### Development
+
+#### Go Modules
+
+```sh
+go get github.com/barchart/common-go
+```
+
+#### License
+
+This software is provided under the MIT license.
