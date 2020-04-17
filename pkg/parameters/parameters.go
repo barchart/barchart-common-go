@@ -150,9 +150,8 @@ func (p parameters) Parse() map[string]interface{} {
 
 	flag.Parse()
 
-	config := configuration.GetConfig()
-	config.SetSecretsManager(getAWSSecretsRegion())
-	smm, smmError := configuration.GetConfig().GetSecretsManager()
+	configuration.SetSecretsManager(getAWSSecretsRegion())
+	smm, smmError := configuration.GetSecretsManager()
 	sm = &smm
 	smError = smmError
 
