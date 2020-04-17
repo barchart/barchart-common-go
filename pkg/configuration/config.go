@@ -20,12 +20,28 @@ import (
 var stage string
 var validate = validation.GetValidator()
 
-var config = Config{
-	CustomSettings: map[string]interface{}{},
+var config Config
+
+func init() {
+	config = *new()
+}
+
+// Creates new instance of configuration
+func new() *Config {
+	return &Config{
+		Databases:      nil,
+		AWS:            nil,
+		CustomSettings: map[string]interface{}{},
+		Stage:          "",
+	}
 }
 
 // InitConfigFromFile reads configuration from file and return config
-func (cfg *Config) InitConfigFromFile(path string, name string) (*Config, error) {
+func InitConfigFromFile(path string, name string) (*Config, error) {
+	return config.initConfigFromFile(path, name)
+}
+
+func (cfg *Config) initConfigFromFile(path string, name string) (*Config, error) {
 	vip := viper.New()
 	vip.AddConfigPath(path)
 	vip.SetConfigName(name)
@@ -55,66 +71,51 @@ func (cfg *Config) InitConfigFromFile(path string, name string) (*Config, error)
 	return cfg, nil
 }
 
-// InitConfigFromFile reads configuration from file and return config
-func InitConfigFromFile(path string, name string) (*Config, error) {
-	return config.InitConfigFromFile(path, name)
-}
-
-// Creates new instance of configuration
-func New() *Config {
-	return &Config{
-		Databases:      nil,
-		AWS:            nil,
-		CustomSettings: map[string]interface{}{},
-		Stage:          "",
-	}
-}
-
 // region Singleton Getters
 
 // GetCustomSettings returns the Custom Settings
 func GetCustomSettingsByKey(key string) (interface{}, error) {
-	return config.GetCustomSettingsByKey(key)
+	return config.getCustomSettingsByKey(key)
 }
 
 // GetDB returns Database configuration by key
 func GetDB(key string) (Database, error) {
-	return config.GetDB(key)
+	return config.getDB(key)
 }
 
 // GetDynamo returns the Dynamo configuration by key
 func GetDynamo(key string) (Dynamo, error) {
-	return config.GetDynamo(key)
+	return config.getDynamo(key)
 }
 
 // GetS3 returns the S3 configuration by key
 func GetS3(key string) (S3, error) {
-	return config.GetS3(key)
+	return config.getS3(key)
 }
 
-// GetSES returns the SES configuration by key
+// GetSes returns the SES configuration by key
 func GetSES(key string) (SES, error) {
-	return config.GetSES(key)
+	return config.getSes(key)
 }
 
 // GetSNS returns the SNS configuration by key
 func GetSNS(key string) (SNS, error) {
-	return config.GetSNS(key)
+	return config.getSNS(key)
 }
 
 // GetSQS returns the SQS configuration by key
 func GetSQS(key string) (SQS, error) {
-	return config.GetSQS(key)
+	return config.getSQS(key)
 }
 
 // GetSecretsManager returns SecretManager configuration
 func GetSecretsManager() (secretsmanager.SecretsManager, error) {
-	return config.GetSecretsManager()
+	return config.getSecretsManager()
 }
 
 // GetStage returns current stage
 func GetStage() string {
-	return config.GetStage()
+	return config.getStage()
 }
 
 // endregion Getters
@@ -123,55 +124,54 @@ func GetStage() string {
 
 // SetCustomSettings sets the Custom Setting
 func SetCustomSettings(key string, cs interface{}) {
-	config.SetCustomSettings(key, cs)
+	config.setCustomSettings(key, cs)
 }
 
 // SetDB sets the Database configuration
 func SetDB(key string, provider string, host string, port int, database string, user string, password string) error {
-	return config.SetDB(key, provider, host, port, database, user, password)
+	return config.setDB(key, provider, host, port, database, user, password)
 }
 
 // SetDynamo sets the Dynamo configuration
 func SetDynamo(key string, region string, prefix string) error {
-	return config.SetDynamo(key, region, prefix)
+	return config.setDynamo(key, region, prefix)
 }
 
 // SetS3 sets the S3 configuration
 func SetS3(key string, region string, bucket string) error {
-	return config.SetS3(key, region, bucket)
+	return config.setS3(key, region, bucket)
 }
 
 // SetSES sets the SES configuration
 func SetSES(key string, region string, from string, domain string) error {
-	return config.SetSES(key, region, from, domain)
+	return config.setSES(key, region, from, domain)
 }
 
 // SetSNS sets the SNS configuration
 func SetSNS(key string, region string, topic string, prefix string) error {
-	return config.SetSNS(key, region, topic, prefix)
+	return config.setSNS(key, region, topic, prefix)
 }
 
 // SetSQS sets the SQS configuration
 func SetSQS(key string, region string, prefix string, queue string) error {
-	return config.SetSQS(key, region, prefix, queue)
+	return config.setSQS(key, region, prefix, queue)
 }
 
 // SetSecretsManager creates a Secrets Manager instance and sets it into the instance of the configuration
 func SetSecretsManager(region string) {
-	config.SetSecretsManager(region)
+	config.setSecretsManager(region)
 }
 
 // SetStage sets the current stage
 func SetStage(stage string) {
-	config.SetStage(stage)
+	config.setStage(stage)
 }
 
 // endregion Setters
 
 // region Getters
 
-// GetCustomSettings returns the Custom Settings
-func (cfg Config) GetCustomSettingsByKey(key string) (interface{}, error) {
+func (cfg Config) getCustomSettingsByKey(key string) (interface{}, error) {
 	if cfg.CustomSettings == nil {
 		cfg.CustomSettings = map[string]interface{}{}
 	}
@@ -185,8 +185,7 @@ func (cfg Config) GetCustomSettingsByKey(key string) (interface{}, error) {
 	return cs, nil
 }
 
-// GetDB returns Database configuration by key
-func (cfg Config) GetDB(key string) (Database, error) {
+func (cfg Config) getDB(key string) (Database, error) {
 	if cfg.Databases == nil {
 		cfg.Databases = Databases{}
 	}
@@ -201,8 +200,7 @@ func (cfg Config) GetDB(key string) (Database, error) {
 	}
 }
 
-// GetDynamo returns the Dynamo configuration by key
-func (cfg Config) GetDynamo(key string) (Dynamo, error) {
+func (cfg Config) getDynamo(key string) (Dynamo, error) {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -221,8 +219,7 @@ func (cfg Config) GetDynamo(key string) (Dynamo, error) {
 	}
 }
 
-// GetS3 returns the S3 configuration by key
-func (cfg Config) GetS3(key string) (S3, error) {
+func (cfg Config) getS3(key string) (S3, error) {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -241,8 +238,7 @@ func (cfg Config) GetS3(key string) (S3, error) {
 	}
 }
 
-// GetSES returns the SES configuration by key
-func (cfg Config) GetSES(key string) (SES, error) {
+func (cfg Config) getSes(key string) (SES, error) {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -261,8 +257,7 @@ func (cfg Config) GetSES(key string) (SES, error) {
 	}
 }
 
-// GetSNS returns the SNS configuration by key
-func (cfg Config) GetSNS(key string) (SNS, error) {
+func (cfg Config) getSNS(key string) (SNS, error) {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -281,8 +276,7 @@ func (cfg Config) GetSNS(key string) (SNS, error) {
 	}
 }
 
-// GetSQS returns the SQS configuration by key
-func (cfg Config) GetSQS(key string) (SQS, error) {
+func (cfg Config) getSQS(key string) (SQS, error) {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -301,8 +295,7 @@ func (cfg Config) GetSQS(key string) (SQS, error) {
 	}
 }
 
-// GetSecretsManager returns SecretManager configuration
-func (cfg *Config) GetSecretsManager() (secretsmanager.SecretsManager, error) {
+func (cfg *Config) getSecretsManager() (secretsmanager.SecretsManager, error) {
 	if cfg.AWS == nil || cfg.AWS.SecretsManager == nil {
 		return secretsmanager.SecretsManager{}, errors.New("secrets manager configuration hasn't been set")
 	}
@@ -310,8 +303,7 @@ func (cfg *Config) GetSecretsManager() (secretsmanager.SecretsManager, error) {
 	return *cfg.AWS.SecretsManager, nil
 }
 
-// GetStage returns current stage
-func (cfg Config) GetStage() string {
+func (cfg Config) getStage() string {
 	return cfg.Stage
 }
 
@@ -319,8 +311,7 @@ func (cfg Config) GetStage() string {
 
 // region Setters
 
-// SetCustomSettings sets the Custom Setting
-func (cfg *Config) SetCustomSettings(key string, cs interface{}) {
+func (cfg *Config) setCustomSettings(key string, cs interface{}) {
 	if cfg.CustomSettings == nil {
 		cfg.CustomSettings = map[string]interface{}{}
 	}
@@ -328,8 +319,7 @@ func (cfg *Config) SetCustomSettings(key string, cs interface{}) {
 	cfg.CustomSettings[key] = cs
 }
 
-// SetDB sets the Database configuration
-func (cfg *Config) SetDB(key string, provider string, host string, port int, database string, user string, password string) error {
+func (cfg *Config) setDB(key string, provider string, host string, port int, database string, user string, password string) error {
 	if cfg.Databases == nil {
 		cfg.Databases = Databases{}
 	}
@@ -355,8 +345,7 @@ func (cfg *Config) SetDB(key string, provider string, host string, port int, dat
 	return nil
 }
 
-// SetDynamo sets the Dynamo configuration
-func (cfg *Config) SetDynamo(key string, region string, prefix string) error {
+func (cfg *Config) setDynamo(key string, region string, prefix string) error {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -383,8 +372,7 @@ func (cfg *Config) SetDynamo(key string, region string, prefix string) error {
 	return nil
 }
 
-// SetS3 sets the S3 configuration
-func (cfg *Config) SetS3(key string, region string, bucket string) error {
+func (cfg *Config) setS3(key string, region string, bucket string) error {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -411,8 +399,7 @@ func (cfg *Config) SetS3(key string, region string, bucket string) error {
 	return nil
 }
 
-// SetSES sets the SES configuration
-func (cfg *Config) SetSES(key string, region string, from string, domain string) error {
+func (cfg *Config) setSES(key string, region string, from string, domain string) error {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -440,8 +427,7 @@ func (cfg *Config) SetSES(key string, region string, from string, domain string)
 	return nil
 }
 
-// SetSNS sets the SNS configuration
-func (cfg *Config) SetSNS(key string, region string, topic string, prefix string) error {
+func (cfg *Config) setSNS(key string, region string, topic string, prefix string) error {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -469,8 +455,7 @@ func (cfg *Config) SetSNS(key string, region string, topic string, prefix string
 	return nil
 }
 
-// SetSQS sets the SQS configuration
-func (cfg *Config) SetSQS(key string, region string, prefix string, queue string) error {
+func (cfg *Config) setSQS(key string, region string, prefix string, queue string) error {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -498,8 +483,7 @@ func (cfg *Config) SetSQS(key string, region string, prefix string, queue string
 	return nil
 }
 
-// SetSecretsManager creates a Secrets Manager instance and sets it into the instance of the configuration
-func (cfg *Config) SetSecretsManager(region string) {
+func (cfg *Config) setSecretsManager(region string) {
 	if cfg.AWS == nil {
 		cfg.AWS = &AWS{}
 	}
@@ -507,8 +491,7 @@ func (cfg *Config) SetSecretsManager(region string) {
 	cfg.AWS.SecretsManager = secretsmanager.New(region)
 }
 
-// SetStage sets the current stage
-func (cfg *Config) SetStage(stage string) {
+func (cfg *Config) setStage(stage string) {
 	cfg.Stage = stage
 }
 
