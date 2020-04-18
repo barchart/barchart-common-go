@@ -1,5 +1,7 @@
 # @barchart/common-go
-    
+
+[![AWS CodeBuild](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiQnBnNGc5M3B3ZTlTMER2aHl6bEJuV1huQmJQdFFVdTMrMFJOMzVEMjU0MGR5VUZkNVVTcm54VVlpTUpNN2R3emg2SVoxNWsrc1BReE1zSmdZazZuN0l3PSIsIml2UGFyYW1ldGVyU3BlYyI6IkpCZEJOcVY1c2lYWW9XZTUiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://github.com/barchart/common-go)
+
 A *public* library of shared GoLang utilities.
   
 ### Overview
