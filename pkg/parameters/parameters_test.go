@@ -108,5 +108,5 @@ func TestParameters_AddUint64(t *testing.T) {
 }
 
 func TestParameters_AddDefaultField(t *testing.T) {
-	require.Equal(t, 123, result["DEFAULT_FIELD"])
+	require.Equal(t, expectDefault, result["DEFAULT_FIELD"])
 }
