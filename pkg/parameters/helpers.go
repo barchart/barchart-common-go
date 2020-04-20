@@ -2,7 +2,7 @@ package parameters
 
 import (
 	"flag"
-	fl "github.com/barchart/common-go/pkg/parameters/flags"
+	"github.com/barchart/common-go/pkg/parameters/flags"
 	"os"
 	"strconv"
 )
@@ -53,7 +53,7 @@ func convertString(str string, typeValue string) interface{} {
 func getAWSSecretsRegion() string {
 	flg := flag.Lookup(AwsRegionSecrets)
 	region := flg.Value.String()
-	if !flg.Value.(*fl.StringValue).IsSet() {
+	if !flg.Value.(*flags.StringValue).IsSet() {
 		region = os.Getenv(AwsRegionSecrets)
 		if region == "" {
 			region = flg.DefValue
@@ -82,31 +82,31 @@ func getValueFromFlag(flg *flag.Flag, typeValue string) (interface{}, bool) {
 	switch typeValue {
 	case boolType:
 		{
-			return flg.Value.(*fl.BoolValue).Get(), flg.Value.(*fl.BoolValue).IsSet()
+			return flg.Value.(*flags.BoolValue).Get(), flg.Value.(*flags.BoolValue).IsSet()
 		}
 	case float64Type:
 		{
-			return flg.Value.(*fl.Float64Value).Get(), flg.Value.(*fl.Float64Value).IsSet()
+			return flg.Value.(*flags.Float64Value).Get(), flg.Value.(*flags.Float64Value).IsSet()
 		}
 	case intType:
 		{
-			return flg.Value.(*fl.IntValue).Get(), flg.Value.(*fl.IntValue).IsSet()
+			return flg.Value.(*flags.IntValue).Get(), flg.Value.(*flags.IntValue).IsSet()
 		}
 	case int64Type:
 		{
-			return flg.Value.(*fl.Int64Value).Get(), flg.Value.(*fl.Int64Value).IsSet()
+			return flg.Value.(*flags.Int64Value).Get(), flg.Value.(*flags.Int64Value).IsSet()
 		}
 	case stringType:
 		{
-			return flg.Value.(*fl.StringValue).Get(), flg.Value.(*fl.StringValue).IsSet()
+			return flg.Value.(*flags.StringValue).Get(), flg.Value.(*flags.StringValue).IsSet()
 		}
 	case uintType:
 		{
-			return flg.Value.(*fl.UintValue).Get(), flg.Value.(*fl.UintValue).IsSet()
+			return flg.Value.(*flags.UintValue).Get(), flg.Value.(*flags.UintValue).IsSet()
 		}
 	case uint64Type:
 		{
-			return flg.Value.(*fl.Uint64Value).Get(), flg.Value.(*fl.Uint64Value).IsSet()
+			return flg.Value.(*flags.Uint64Value).Get(), flg.Value.(*flags.Uint64Value).IsSet()
 		}
 	}
 
