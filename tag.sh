@@ -52,7 +52,7 @@ get_latest_version() {
 
 latestVersion=$(get_latest_version)
 
-echo The lates tag: "$latestVersion"
+echo The latest tag: "$latestVersion"
 
 read -p 'Enter new version (e.g: v0.0.1): ' version
 
