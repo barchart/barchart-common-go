@@ -3,7 +3,7 @@ package parameters_test
 import (
 	"flag"
 	"github.com/barchart/common-go/pkg/parameters"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"log"
 	"os"
 	"strconv"
@@ -72,41 +72,41 @@ func TestMain(m *testing.M) {
 	setup()
 
 	result = params.Parse()
-	m.Run()
+	os.Exit(m.Run())
 }
 
 func TestParameters_AddString(t *testing.T) {
-	assert.Equal(t, expectString, result["STRING"])
+	require.Equal(t, expectString, result["STRING"])
 }
 
 func TestParameters_AddInt(t *testing.T) {
-	assert.Equal(t, expectedInt, result["INT"])
+	require.Equal(t, expectedInt, result["INT"])
 }
 
 func TestParameters_AddInt64(t *testing.T) {
-	assert.Equal(t, expectedInt64, result["INT64"])
+	require.Equal(t, expectedInt64, result["INT64"])
 }
 
 func TestParameters_AddFloat64(t *testing.T) {
-	assert.Equal(t, expectedFloat64, result["FLOAT64"])
+	require.Equal(t, expectedFloat64, result["FLOAT64"])
 }
 
 func TestParameters_AddBool(t *testing.T) {
-	assert.Equal(t, true, result["BOOL"])
+	require.Equal(t, true, result["BOOL"])
 }
 
 func TestParameters_Add(t *testing.T) {
-	assert.Equal(t, expectAdd, result["ADD"])
+	require.Equal(t, expectAdd, result["ADD"])
 }
 
 func TestParameters_AddUint(t *testing.T) {
-	assert.Equal(t, expectedUint, result["UINT"])
+	require.Equal(t, expectedUint, result["UINT"])
 }
 
 func TestParameters_AddUint64(t *testing.T) {
-	assert.Equal(t, expectedUint64, result["UINT64"])
+	require.Equal(t, expectedUint64, result["UINT64"])
 }
 
 func TestParameters_AddDefaultField(t *testing.T) {
-	assert.Equal(t, expectDefault, result["DEFAULT_FIELD"])
+	require.Equal(t, 123, result["DEFAULT_FIELD"])
 }
