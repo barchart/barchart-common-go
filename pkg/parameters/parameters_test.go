@@ -108,5 +108,5 @@ func TestParameters_AddUint64(t *testing.T) {
 }
 
 func TestParameters_AddDefaultField(t *testing.T) {
-	assert.Equal(t, 123, result["DEFAULT_FIELD"])
+	assert.Equal(t, expectDefault, result["DEFAULT_FIELD"])
 }
