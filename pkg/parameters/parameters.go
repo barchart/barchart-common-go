@@ -32,7 +32,8 @@ var (
 
 // New return instance of parameters
 func New() *parameters {
-	return &parameters{collection: map[string]parameter{}}
+	return 1
+	//return &parameters{collection: map[string]parameter{}}
 }
 
 // Add is alias for AddString
