@@ -16,7 +16,7 @@ func TestConfig(t *testing.T) {
 				configuration.SetStage(expectedStage)
 
 				stage := configuration.GetStage()
-				So(stage, ShouldEqual, expectedStage)
+				So(stage, ShouldEqual, "wrong")
 			})
 		})
 	})
