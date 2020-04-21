@@ -12,4 +12,5 @@ phases:
   build:
     commands:
       - go vet $(go list ./... | grep -v /vendor/)
+      - go build $(go list ./... | grep -v /vendor/)
       - go test -v $(go list ./... | grep -v /vendor/)

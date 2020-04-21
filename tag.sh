@@ -47,8 +47,7 @@ semver_compare() {
 
 get_latest_version() {
   git fetch --tags
-  #echo $(git describe --tags $(git rev-list --tags --max-count=1))
-  echo "v$(git tag | cut -f 2 -d 'v' | sort -n -t '.' -k1,1 -k2,2 -k3,3 -r | head -1)"
+  echo "$(git tag | grep 'v' | tr - \~ | sort -V | tr \~ - | tail -1)"
 }
 
 latestVersion=$(get_latest_version)
