@@ -27,7 +27,7 @@ func init() {
 }
 
 // Creates new instance of configuration
-func new() *Config
+func new() *Config {
 	return &Config{
 		Databases:      nil,
 		AWS:            nil,
