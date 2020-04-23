@@ -17,6 +17,7 @@ type usage struct {
 	appDescription string
 	commands       []command
 	parameters     map[string]parameters.Parameter
+	arguments      []string
 }
 
 var usg usage
@@ -29,11 +30,13 @@ func init() {
 	}
 }
 
+// Initialize adds application name and description
 func Initialize(name, description string) {
 	usg.appName = name
 	usg.appDescription = description
 }
 
+// AddCommand adds a command description
 func AddCommand(name, description string, args ...string) {
 	usg.commands = append(usg.commands, command{
 		name:        name,
@@ -42,35 +45,47 @@ func AddCommand(name, description string, args ...string) {
 	})
 }
 
-func AddParameters(collection map[string]parameters.Parameter) {
+// AddParameters adds parameters description from parameters collection (flags, env, AWS Secrets Manager)
+func AddParameters() {
+	collection := parameters.GetCollection()
 	if collection != nil {
 		usg.parameters = collection
 	}
 }
 
-func (u usage) getName() string {
-	return fmt.Sprintf("  Application: %v\n", u.appName)
+// AddArguments adds arguments description to run without commands
+func AddArguments(args ...string) {
+	usg.arguments = args
 }
 
-func (u usage) getDescription() string {
-	return fmt.Sprintf("  Description: %v\n", u.appDescription)
+// GetUsage returns a usage string
+func GetUsage() string {
+	return fmt.Sprintf("Usage: \n%v%v%v%v%v", getName(), getDescription(), getParameters(), getCommands(), getArguments())
 }
 
-func (u usage) getCommands() string {
+func getName() string {
+	return fmt.Sprintf("  Application: %v\n", usg.appName)
+}
+
+func getDescription() string {
+	return fmt.Sprintf("  Description: %v\n", usg.appDescription)
+}
+
+func getCommands() string {
 	str := ""
 
 	if len(usg.commands) != 0 {
 		buf := bytes.NewBufferString("  Commands:\n")
 
-		for i, command := range u.commands {
+		for i, command := range usg.commands {
 			buf.WriteString(fmt.Sprintf("\t%v", command.name))
 
 			for _, argument := range command.arguments {
 				buf.WriteString(fmt.Sprintf(" <%v>", argument))
 			}
 
-			if i == len(u.commands)-1 {
-				buf.WriteString(fmt.Sprintf("\n\t  %v", command.description))
+			if i == len(usg.commands)-1 {
+				buf.WriteString(fmt.Sprintf("\n\t  %v\n", command.description))
 			} else {
 				buf.WriteString(fmt.Sprintf("\n\t  %v\n\n", command.description))
 			}
@@ -82,13 +97,13 @@ func (u usage) getCommands() string {
 	return str
 }
 
-func (u usage) getParameters() string {
+func getParameters() string {
 	str := ""
 
-	if len(u.parameters) != 0 {
+	if len(usg.parameters) != 0 {
 		buf := bytes.NewBufferString("  Parameters:\n")
 		index := 0
-		for _, param := range u.parameters {
+		for _, param := range usg.parameters {
 			name := param.Name
 
 			if param.Required {
@@ -97,7 +112,7 @@ func (u usage) getParameters() string {
 
 			buf.WriteString(fmt.Sprintf("\t%v", name))
 
-			if index == len(u.parameters)-1 {
+			if index == len(usg.parameters)-1 {
 				buf.WriteString(fmt.Sprintf("\n\t  %v (default %v)\n", param.Usage, param.DefaultValue))
 			} else {
 				buf.WriteString(fmt.Sprintf("\n\t  %v\n\n", param.Usage))
@@ -112,6 +127,21 @@ func (u usage) getParameters() string {
 	return str
 }
 
-func GetUsage() string {
-	return fmt.Sprintf("Usage: \n%v%v%v%v", usg.getName(), usg.getDescription(), usg.getParameters(), usg.getCommands())
+func getArguments() string {
+	str := ""
+
+	if len(usg.arguments) != 0 {
+		buf := bytes.NewBufferString("  Arguments:\n")
+		index := 0
+		for _, arg := range usg.arguments {
+
+			buf.WriteString(fmt.Sprintf("\t<%v>", arg))
+
+			index++
+		}
+
+		str = buf.String()
+	}
+
+	return str
 }

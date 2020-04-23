@@ -1,7 +1,6 @@
-package configuration_test
+package configuration
 
 import (
-	"github.com/barchart/common-go/pkg/configuration"
 	"github.com/barchart/common-go/pkg/configuration/database"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -13,9 +12,9 @@ func TestConfig(t *testing.T) {
 			expectedStage := "dev"
 
 			Convey("Set/Get Stage", func() {
-				configuration.SetStage(expectedStage)
+				SetStage(expectedStage)
 
-				stage := configuration.GetStage()
+				stage := GetStage()
 				So(stage, ShouldEqual, expectedStage)
 			})
 		})
@@ -37,12 +36,12 @@ func TestDatabase(t *testing.T) {
 		)
 
 		Convey("Set Database", func() {
-			setErr := configuration.SetDB(key, expectedDB.Provider, expectedDB.Host, expectedDB.Port, expectedDB.Database, expectedDB.User, expectedDB.Password)
+			setErr := SetDB(key, expectedDB.Provider, expectedDB.Host, expectedDB.Port, expectedDB.Database, expectedDB.User, expectedDB.Password)
 			So(setErr, ShouldBeNil)
 		})
 
 		Convey("Get Database", func() {
-			db, getErr := configuration.GetDB(key)
+			db, getErr := GetDB(key)
 
 			So(getErr, ShouldBeNil)
 			So(db, ShouldResemble, expectedDB)
@@ -64,8 +63,8 @@ func TestCustomSettings(t *testing.T) {
 		)
 
 		Convey("Get Custom Settings", func() {
-			configuration.SetCustomSettings(key, expectedCustomSettings)
-			cs, getErr := configuration.GetCustomSettingsByKey(key)
+			SetCustomSettings(key, expectedCustomSettings)
+			cs, getErr := GetCustomSettingsByKey(key)
 			So(getErr, ShouldBeNil)
 			So(cs, ShouldEqual, expectedCustomSettings)
 		})
@@ -81,12 +80,12 @@ func TestSetS3(t *testing.T) {
 		)
 
 		Convey("Set S3", func() {
-			setErr := configuration.SetS3(key, region, bucket)
+			setErr := SetS3(key, region, bucket)
 			So(setErr, ShouldBeNil)
 		})
 
 		Convey("Get S3", func() {
-			s3, getErr := configuration.GetS3(key)
+			s3, getErr := GetS3(key)
 			So(getErr, ShouldBeNil)
 			So(s3.Region, ShouldEqual, region)
 			So(s3.Bucket, ShouldEqual, bucket)
@@ -104,13 +103,13 @@ func TestSetSNS(t *testing.T) {
 		)
 
 		Convey("Set SNS", func() {
-			setErr := configuration.SetSNS(key, region, topic, prefix)
+			setErr := SetSNS(key, region, topic, prefix)
 			So(setErr, ShouldBeNil)
 		})
 
 		Convey("Get SNS", func() {
-			_ = configuration.SetSNS(key, region, topic, prefix)
-			sns, getErr := configuration.GetSNS(key)
+			_ = SetSNS(key, region, topic, prefix)
+			sns, getErr := GetSNS(key)
 			So(getErr, ShouldBeNil)
 			So(sns.Region, ShouldEqual, region)
 			So(sns.Topic, ShouldEqual, topic)

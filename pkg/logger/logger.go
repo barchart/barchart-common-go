@@ -9,7 +9,7 @@ import (
 
 var (
 	defaultFormatter *TextFormatter
-	Logger           logger
+	Log              logger
 )
 
 type logger struct {
@@ -36,9 +36,9 @@ func init() {
 		Once:             sync.Once{},
 	}
 
-	Logger = logger{logrus.New()}
+	Log = logger{logrus.New()}
 
-	Logger.SetFormatter(defaultFormatter)
+	Log.SetFormatter(defaultFormatter)
 
 	debug, _ := strconv.ParseBool(os.Getenv("DEBUG"))
 

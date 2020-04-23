@@ -12,7 +12,7 @@ import (
 	"github.com/barchart/common-go/pkg/logger"
 )
 
-var log = logger.Logger
+var log = logger.Log
 
 func init() {
 	log.SetReportCaller(true)

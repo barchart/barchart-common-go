@@ -28,7 +28,6 @@ var (
 	expectedUint64  = uint64(100)
 )
 
-var params = New()
 var result map[string]interface{}
 var required, _ = strconv.ParseBool(os.Getenv("REQUIRED"))
 
@@ -48,18 +47,18 @@ func setup() {
 }
 
 func TestMain(m *testing.M) {
-	params.Add("DEFAULT_FIELD", expectDefault, "The default Parameter", false)
-	params.Add("ADD", "default", "The string Parameter", false)
-	params.AddString("STRING", "default", "The string Parameter", false)
-	params.AddBool("BOOL", false, "The bool Parameter from env", false)
-	params.AddInt("INT", 50, "The int Parameter", false)
-	params.AddInt64("INT64", 50, "The int64 Parameter", false)
-	params.AddFloat64("FLOAT64", 50.50, "The float64 Parameter", false)
-	params.AddUint("UINT", 50, "The uint Parameter", false)
-	params.AddUint64("UINT64", 50, "The uint64 Parameter", false)
+	Add("DEFAULT_FIELD", expectDefault, "The default Parameter", false)
+	Add("ADD", "default", "The string Parameter", false)
+	AddString("STRING", "default", "The string Parameter", false)
+	AddBool("BOOL", false, "The bool Parameter from env", false)
+	AddInt("INT", 50, "The int Parameter", false)
+	AddInt64("INT64", 50, "The int64 Parameter", false)
+	AddFloat64("FLOAT64", 50.50, "The float64 Parameter", false)
+	AddUint("UINT", 50, "The uint Parameter", false)
+	AddUint64("UINT64", 50, "The uint64 Parameter", false)
 
 	if required {
-		params.AddBool("REQUIRED_FIELD", false, "The required Parameter", true)
+		AddBool("REQUIRED_FIELD", false, "The required Parameter", true)
 		defer func() {
 			if err := recover(); err != nil {
 				log.Printf("panic: %s", err)
@@ -69,7 +68,7 @@ func TestMain(m *testing.M) {
 
 	setup()
 
-	result = params.Parse()
+	result = Parse()
 	os.Exit(m.Run())
 }
 
