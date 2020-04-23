@@ -23,11 +23,10 @@ var validate = validation.GetValidator()
 var config Config
 
 func init() {
-	config = *new()
+	config = *newConfig()
 }
 
-// Creates new instance of configuration
-func new() *Config {
+func newConfig() *Config {
 	return &Config{
 		Databases:      nil,
 		AWS:            nil,

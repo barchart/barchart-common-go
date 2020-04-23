@@ -9,8 +9,14 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
-	"log"
+	"github.com/barchart/common-go/pkg/logger"
 )
+
+var log = logger.Logger
+
+func init() {
+	log.SetReportCaller(true)
+}
 
 // cache is a type of cache system of Secrets Manager
 type cache struct {
@@ -89,7 +95,7 @@ func (secretsManager SecretsManager) GetValue(secretName string) (string, bool, 
 				return "", false, errors.New(fmt.Sprintln(secretsmanager.ErrCodeResourceNotFoundException, aerr.Error()))
 			}
 		} else {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 		}
 
 		return "", false, err
@@ -104,7 +110,7 @@ func (secretsManager SecretsManager) GetValue(secretName string) (string, bool, 
 		decodedBinarySecretBytes := make([]byte, base64.StdEncoding.DecodedLen(len(secretResult.SecretBinary)))
 		length, err := base64.StdEncoding.Decode(decodedBinarySecretBytes, secretResult.SecretBinary)
 		if err != nil {
-			fmt.Println("Base64 Decode Error:", err)
+			log.Errorln("Base64 Decode Error:", err)
 			return "", false, err
 		}
 		result = string(decodedBinarySecretBytes[:length])

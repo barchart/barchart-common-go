@@ -2,16 +2,16 @@ package parameters
 
 import (
 	"flag"
-	"fmt"
 	"github.com/barchart/common-go/pkg/configuration"
 	"github.com/barchart/common-go/pkg/configuration/aws/secretsmanager"
+	"github.com/barchart/common-go/pkg/logger"
 	"github.com/barchart/common-go/pkg/parameters/flags"
 	"os"
 	"strings"
 )
 
-// parameter is a struct defines a parameter
-type parameter struct {
+// Parameter is a struct defines a Parameter
+type Parameter struct {
 	Name         string
 	DefaultValue interface{}
 	Usage        string
@@ -20,19 +20,20 @@ type parameter struct {
 	valueType    string
 }
 
-// parameters is a struct that holds the collection of parameter
+// parameters is a struct that holds the Collection of Parameter
 type parameters struct {
-	collection map[string]parameter
+	Collection map[string]Parameter
 }
 
 var (
 	sm      *secretsmanager.SecretsManager
 	smError error
+	log     = logger.Logger
 )
 
 // New return instance of parameters
 func New() *parameters {
-	return &parameters{collection: map[string]parameter{}}
+	return &parameters{Collection: map[string]Parameter{}}
 }
 
 // Add is alias for AddString
@@ -40,9 +41,9 @@ func (p *parameters) Add(name string, value string, usage string, required bool,
 	p.AddString(name, value, usage, required, awsSecret...)
 }
 
-// AddBool defines a bool parameter with specified name, default value, and usage string.
+// AddBool defines a bool Parameter with specified name, default value, and usage string.
 func (p *parameters) AddBool(name string, value bool, usage string, required bool, awsSecret ...bool) {
-	p.collection[name] = parameter{
+	p.Collection[name] = Parameter{
 		Name:         name,
 		DefaultValue: value,
 		Usage:        usage,
@@ -54,9 +55,9 @@ func (p *parameters) AddBool(name string, value bool, usage string, required boo
 	flags.Bool(name, value, usage)
 }
 
-// AddFloat64 defines a float64 parameter with specified name, default value, and usage string.
+// AddFloat64 defines a float64 Parameter with specified name, default value, and usage string.
 func (p *parameters) AddFloat64(name string, value float64, usage string, required bool, awsSecret ...bool) {
-	p.collection[name] = parameter{
+	p.Collection[name] = Parameter{
 		Name:         name,
 		DefaultValue: value,
 		Usage:        usage,
@@ -68,9 +69,9 @@ func (p *parameters) AddFloat64(name string, value float64, usage string, requir
 	flags.Float64(name, value, usage)
 }
 
-// AddInt defines a int parameter with specified name, default value, and usage string.
+// AddInt defines a int Parameter with specified name, default value, and usage string.
 func (p *parameters) AddInt(name string, value int, usage string, required bool, awsSecret ...bool) {
-	p.collection[name] = parameter{
+	p.Collection[name] = Parameter{
 		Name:         name,
 		DefaultValue: value,
 		Usage:        usage,
@@ -82,9 +83,9 @@ func (p *parameters) AddInt(name string, value int, usage string, required bool,
 	flags.Int(name, value, usage)
 }
 
-// AddInt64 defines a int64 parameter with specified name, default value, and usage string.
+// AddInt64 defines a int64 Parameter with specified name, default value, and usage string.
 func (p *parameters) AddInt64(name string, value int64, usage string, required bool, awsSecret ...bool) {
-	p.collection[name] = parameter{
+	p.Collection[name] = Parameter{
 		Name:         name,
 		DefaultValue: value,
 		Usage:        usage,
@@ -96,9 +97,9 @@ func (p *parameters) AddInt64(name string, value int64, usage string, required b
 	flags.Int64(name, value, usage)
 }
 
-// AddString defines a string parameter with specified name, default value, and usage string.
+// AddString defines a string Parameter with specified name, default value, and usage string.
 func (p *parameters) AddString(name string, value string, usage string, required bool, awsSecret ...bool) {
-	p.collection[name] = parameter{
+	p.Collection[name] = Parameter{
 		Name:         name,
 		DefaultValue: value,
 		Usage:        usage,
@@ -110,9 +111,9 @@ func (p *parameters) AddString(name string, value string, usage string, required
 	flags.String(name, value, usage)
 }
 
-// AddUint defines a uint parameter with specified name, default value, and usage string.
+// AddUint defines a uint Parameter with specified name, default value, and usage string.
 func (p *parameters) AddUint(name string, value uint, usage string, required bool, awsSecret ...bool) {
-	p.collection[name] = parameter{
+	p.Collection[name] = Parameter{
 		Name:         name,
 		DefaultValue: value,
 		Usage:        usage,
@@ -124,9 +125,9 @@ func (p *parameters) AddUint(name string, value uint, usage string, required boo
 	flags.Uint(name, value, usage)
 }
 
-// AddUint64 defines a uint64 parameter with specified name, default value, and usage string.
+// AddUint64 defines a uint64 Parameter with specified name, default value, and usage string.
 func (p *parameters) AddUint64(name string, value uint64, usage string, required bool, awsSecret ...bool) {
-	p.collection[name] = parameter{
+	p.Collection[name] = Parameter{
 		Name:         name,
 		DefaultValue: value,
 		Usage:        usage,
@@ -145,7 +146,7 @@ func (p parameters) Parse() map[string]interface{} {
 	flags.String(AwsRegionSecrets, "us-east-1", "The AWS Secrets Manager region")
 
 	if flag.Parsed() {
-		panic("flags have already parsed")
+		log.Panic("flags have already parsed")
 	}
 
 	flag.Parse()
@@ -155,11 +156,11 @@ func (p parameters) Parse() map[string]interface{} {
 	sm = &smm
 	smError = smmError
 
-	if p.collection == nil {
-		panic("parameters wasn't added")
+	if p.Collection == nil {
+		log.Panic("parameters wasn't added")
 	}
 
-	for _, param := range p.collection {
+	for _, param := range p.Collection {
 		flg := flag.Lookup(param.Name)
 		value, isSet := getValueFromFlag(flg, param.valueType)
 
@@ -186,7 +187,7 @@ func (p parameters) Parse() map[string]interface{} {
 	}
 
 	if len(missing) > 0 {
-		panic(fmt.Sprintf("missing required parameters: [ %v ]", strings.Join(missing, ",")))
+		log.Panicf("missing required parameters: [ %v ]", strings.Join(missing, ","))
 	}
 
 	return result

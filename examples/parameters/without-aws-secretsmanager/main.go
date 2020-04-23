@@ -1,9 +1,11 @@
 package main
 
 import (
+	"github.com/barchart/common-go/pkg/logger"
 	"github.com/barchart/common-go/pkg/parameters"
-	"log"
 )
+
+var log = logger.Logger
 
 func main() {
 	params := parameters.New()

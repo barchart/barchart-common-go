@@ -2,14 +2,16 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/barchart/common-go/pkg/logger"
 	"github.com/barchart/common-go/pkg/parameters"
-	"log"
 )
 
 type exampleSecretJson struct {
 	Title string `json:"title"`
 	Value string `json:"value"`
 }
+
+var log = logger.Logger
 
 func main() {
 	params := parameters.New()

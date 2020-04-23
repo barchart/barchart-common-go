@@ -1,10 +1,8 @@
-package parameters_test
+package parameters
 
 import (
 	"flag"
-	"github.com/barchart/common-go/pkg/parameters"
 	"github.com/stretchr/testify/require"
-	"log"
 	"os"
 	"strconv"
 	"testing"
@@ -30,7 +28,7 @@ var (
 	expectedUint64  = uint64(100)
 )
 
-var params = parameters.New()
+var params = New()
 var result map[string]interface{}
 var required, _ = strconv.ParseBool(os.Getenv("REQUIRED"))
 
@@ -50,18 +48,18 @@ func setup() {
 }
 
 func TestMain(m *testing.M) {
-	params.Add("DEFAULT_FIELD", expectDefault, "The default parameter", false)
-	params.Add("ADD", "default", "The string parameter", false)
-	params.AddString("STRING", "default", "The string parameter", false)
-	params.AddBool("BOOL", false, "The bool parameter from env", false)
-	params.AddInt("INT", 50, "The int parameter", false)
-	params.AddInt64("INT64", 50, "The int64 parameter", false)
-	params.AddFloat64("FLOAT64", 50.50, "The float64 parameter", false)
-	params.AddUint("UINT", 50, "The uint parameter", false)
-	params.AddUint64("UINT64", 50, "The uint64 parameter", false)
+	params.Add("DEFAULT_FIELD", expectDefault, "The default Parameter", false)
+	params.Add("ADD", "default", "The string Parameter", false)
+	params.AddString("STRING", "default", "The string Parameter", false)
+	params.AddBool("BOOL", false, "The bool Parameter from env", false)
+	params.AddInt("INT", 50, "The int Parameter", false)
+	params.AddInt64("INT64", 50, "The int64 Parameter", false)
+	params.AddFloat64("FLOAT64", 50.50, "The float64 Parameter", false)
+	params.AddUint("UINT", 50, "The uint Parameter", false)
+	params.AddUint64("UINT64", 50, "The uint64 Parameter", false)
 
 	if required {
-		params.AddBool("REQUIRED_FIELD", false, "The required parameter", true)
+		params.AddBool("REQUIRED_FIELD", false, "The required Parameter", true)
 		defer func() {
 			if err := recover(); err != nil {
 				log.Printf("panic: %s", err)

@@ -63,8 +63,8 @@ func getAWSSecretsRegion() string {
 	return region
 }
 
-// getValueFromAWSSecretsManager returns a parameter value from the AWS Secrets Manager
-func getValueFromAWSSecretsManager(param parameter) interface{} {
+// getValueFromAWSSecretsManager returns a Parameter value from the AWS Secrets Manager
+func getValueFromAWSSecretsManager(param Parameter) interface{} {
 	if param.AWSSecret {
 		if sm != nil && smError == nil {
 			value, _, err := sm.GetValue(param.Name)
