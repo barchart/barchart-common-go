@@ -4,7 +4,7 @@ The `usage` package provides a possibility to define and print usage text for an
 
 ## Example
   
-**Path** - [`examples/usage/main.go`](examples/usage/main.go)  
+**Path** - [`examples/usage/main.go`](/examples/usage/main.go)  
 
 ### How to run  
 

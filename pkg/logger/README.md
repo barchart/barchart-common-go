@@ -4,7 +4,7 @@ The `logger` package is a wrapper over [logrus](https://github.com/sirupsen/logr
 
 ## Example
   
-**Path** - [`examples/logger/main.go`](examples/logger/main.go)  
+**Path** - [`examples/logger/main.go`](/examples/logger/main.go)  
 
 ### How to run  
 

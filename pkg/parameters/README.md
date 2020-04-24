@@ -11,7 +11,7 @@ All examples are stored inside the `/examples/parameters` folder.
   
 ### With AWS Secrets Manager
   
-**Path** - [`examples/parameters/with-aws-secretsmanager/main.go`](examples/parameters/with-aws-secretsmanager/main.go)  
+**Path** - [`examples/parameters/with-aws-secretsmanager/main.go`](/examples/parameters/with-aws-secretsmanager/main.go)  
   
 It reads parameters from the `flags`, `environment variables`, and the `AWS Secrets Manager` and prints them to the console.   
 You should have access to the `AWS Secrets Manager` and the following secrets should exist:  
@@ -36,7 +36,7 @@ You should have access to the `AWS Secrets Manager` and the following secrets sh
   
 ### Without AWS Secrets Manager
   
-**Path** - [`examples/parameters/without-aws-secretsmanager/main.go`](examples/parameters/without-aws-secretsmanager/main.go)  
+**Path** - [`examples/parameters/without-aws-secretsmanager/main.go`](/examples/parameters/without-aws-secretsmanager/main.go)  
   
   
 It reads parameters from the `flags` and `environment variables` and prints them to the console.   
