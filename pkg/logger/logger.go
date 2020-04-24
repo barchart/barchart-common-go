@@ -32,26 +32,25 @@ func init() {
 		FullTimestamp:    true,
 		TimestampFormat:  "2006-01-02 15:04:05",
 		QuoteEmptyFields: true,
+		ForceFormatting:  true,
 		QuoteCharacter:   "",
 		Once:             sync.Once{},
 	}
 
-	Log = logger{logrus.New()}
-
-	Log.SetFormatter(defaultFormatter)
-
-	debug, _ := strconv.ParseBool(os.Getenv("DEBUG"))
-
-	if debug {
-		logrus.SetLevel(DebugLevel)
-	} else {
-		logrus.SetLevel(InfoLevel)
-	}
+	Log = logger{New()}
 }
 
 func New() *logrus.Logger {
 	l := logrus.New()
+	l.SetReportCaller(true)
 	l.SetFormatter(defaultFormatter)
+	debug, _ := strconv.ParseBool(os.Getenv("DEBUG"))
+
+	if debug {
+		l.SetLevel(DebugLevel)
+	} else {
+		l.SetLevel(InfoLevel)
+	}
 
 	return l
 }

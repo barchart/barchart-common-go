@@ -12,12 +12,18 @@ type command struct {
 	arguments   []string
 }
 
+type arguments struct {
+	name        string
+	description string
+}
+
 type usage struct {
 	appName        string
 	appDescription string
 	commands       []command
 	parameters     map[string]parameters.Parameter
-	arguments      []string
+	arguments      []arguments
+	examples       []string
 }
 
 var usg usage
@@ -53,14 +59,22 @@ func AddParameters() {
 	}
 }
 
-// AddArguments adds arguments description to run without commands
-func AddArguments(args ...string) {
-	usg.arguments = args
+// AddArgument adds argument to run without commands
+func AddArgument(name, description string) {
+	usg.arguments = append(usg.arguments, arguments{
+		name:        name,
+		description: description,
+	})
+}
+
+// AddArgument adds example how to run a program
+func AddExample(example string) {
+	usg.examples = append(usg.examples, example)
 }
 
 // GetUsage returns a usage string
 func GetUsage() string {
-	return fmt.Sprintf("Usage: \n%v%v%v%v%v", getName(), getDescription(), getParameters(), getCommands(), getArguments())
+	return fmt.Sprintf("Usage: \n%v%v%v%v%v%v", getName(), getDescription(), getParameters(), getCommands(), getArguments(), getExamples())
 }
 
 func getName() string {
@@ -131,13 +145,34 @@ func getArguments() string {
 	str := ""
 
 	if len(usg.arguments) != 0 {
-		buf := bytes.NewBufferString("  Arguments:\n")
-		index := 0
-		for _, arg := range usg.arguments {
+		buf := bytes.NewBufferString("  Arguments (without command):\n")
+		for i, arg := range usg.arguments {
 
-			buf.WriteString(fmt.Sprintf("\t<%v>", arg))
+			if i == len(usg.examples)-1 {
+				buf.WriteString(fmt.Sprintf("  \t<%v> %v\n", arg.name, arg.description))
+			} else {
+				buf.WriteString(fmt.Sprintf("  \t<%v> %v\n\n", arg.name, arg.description))
+			}
+		}
 
-			index++
+		str = buf.String()
+	}
+
+	return str
+}
+
+func getExamples() string {
+	str := ""
+
+	if len(usg.arguments) != 0 {
+		buf := bytes.NewBufferString("  Examples:\n")
+		for i, ex := range usg.examples {
+
+			if i == len(usg.examples)-1 {
+				buf.WriteString(fmt.Sprintf("  \t%v\n", ex))
+			} else {
+				buf.WriteString(fmt.Sprintf("  \t%v\n\n", ex))
+			}
 		}
 
 		str = buf.String()
