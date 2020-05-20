@@ -3,6 +3,8 @@ package configuration
 import (
 	"errors"
 	"fmt"
+	"os"
+
 	. "github.com/barchart/common-go/pkg/configuration/aws"
 	. "github.com/barchart/common-go/pkg/configuration/aws/dynamo"
 	. "github.com/barchart/common-go/pkg/configuration/aws/s3"
@@ -14,7 +16,6 @@ import (
 	"github.com/barchart/common-go/pkg/validation"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
-	"os"
 )
 
 var stage string
@@ -126,9 +127,19 @@ func SetCustomSettings(key string, cs interface{}) {
 	config.setCustomSettings(key, cs)
 }
 
-// SetDB sets the Database configuration
-func SetDB(key string, provider string, host string, port int, database string, user string, password string) error {
-	return config.setDB(key, provider, host, port, database, user, password)
+// SetDatabaseProperties sets the Database configuration by providing parameters
+func SetDatabaseProperties(key string, provider string, host string, port int, database string, user string, password string) error {
+	return config.setDatabaseProperties(key, provider, host, port, database, user, password)
+}
+
+// SetDatabaseObject sets the Database configuration
+func SetDatabaseObject(key string, database Database) error {
+	return config.setDatabaseObject(key, database)
+}
+
+// SetDatabase sets the Database configuration
+func SetDatabase(key string, database Database) error {
+	return SetDatabaseObject(key, database)
 }
 
 // SetDynamo sets the Dynamo configuration
@@ -318,7 +329,7 @@ func (cfg *Config) setCustomSettings(key string, cs interface{}) {
 	cfg.CustomSettings[key] = cs
 }
 
-func (cfg *Config) setDB(key string, provider string, host string, port int, database string, user string, password string) error {
+func (cfg *Config) setDatabaseProperties(key string, provider string, host string, port int, database string, user string, password string) error {
 	if cfg.Databases == nil {
 		cfg.Databases = Databases{}
 	}
@@ -328,7 +339,7 @@ func (cfg *Config) setDB(key string, provider string, host string, port int, dat
 		Host:     host,
 		Port:     port,
 		Database: database,
-		User:     user,
+		Username: user,
 		Password: password,
 	}
 
@@ -340,6 +351,23 @@ func (cfg *Config) setDB(key string, provider string, host string, port int, dat
 	Databases := cfg.Databases
 
 	Databases[key] = db
+
+	return nil
+}
+
+func (cfg *Config) setDatabaseObject(key string, database Database) error {
+	if cfg.Databases == nil {
+		cfg.Databases = Databases{}
+	}
+
+	err := validate.Struct(database)
+	if err != nil {
+		return err
+	}
+
+	Databases := cfg.Databases
+
+	Databases[key] = database
 
 	return nil
 }

@@ -1,10 +1,11 @@
 package logger
 
 import (
-	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 	"sync"
+
+	"github.com/sirupsen/logrus"
 )
 
 var (

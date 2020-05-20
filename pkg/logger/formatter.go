@@ -86,7 +86,7 @@ type TextFormatter struct {
 	// Disable the conversion of the log levels to uppercase
 	DisableUppercase bool
 
-	// Enable logging the full timestamp when a TTY is attached instead of just
+	// SecretsManagerEnable logging the full timestamp when a TTY is attached instead of just
 	// the time passed since beginning of execution.
 	FullTimestamp bool
 

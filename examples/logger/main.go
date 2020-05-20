@@ -1,9 +1,10 @@
 package main
 
 import (
+	"sync"
+
 	"github.com/barchart/common-go/pkg/logger"
 	"github.com/sirupsen/logrus"
-	"sync"
 )
 
 // Get customized instance logrus

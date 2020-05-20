@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+
 	"github.com/barchart/common-go/pkg/logger"
 	"github.com/barchart/common-go/pkg/parameters"
 	"github.com/barchart/common-go/pkg/usage"
@@ -14,7 +15,7 @@ func main() {
 
 	myParam := parameters.Parse()
 
-	usage.Initialize(myParam["TITLE"].(string), "This is an example application to show how to work with the usage package.")
+	usage.Initialize(myParam["TITLE"].(string), "This is the example application to show how to work with the usage package.")
 	usage.AddParameters()
 	usage.AddCommand("age", "Print your age", "age")
 	usage.AddCommand("name", "Print your name", "name")

@@ -2,10 +2,11 @@ package parameters
 
 import (
 	"flag"
-	"github.com/stretchr/testify/require"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 const (

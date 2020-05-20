@@ -1,10 +1,14 @@
 package parameters
 
 import (
+	"encoding/json"
 	"flag"
-	"github.com/barchart/common-go/pkg/parameters/flags"
+	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/barchart/common-go/pkg/configuration/database"
+	"github.com/barchart/common-go/pkg/parameters/flags"
 )
 
 // convertStrings converts a string to a typeValue and returns it
@@ -44,6 +48,12 @@ func convertString(str string, typeValue string) interface{} {
 			value, _ := strconv.ParseUint(str, 10, 64)
 			return value
 		}
+	case databaseType:
+		{
+			value := database.Database{}
+			_ = json.Unmarshal([]byte(str), &value)
+			return value
+		}
 	}
 
 	return str
@@ -65,11 +75,30 @@ func getAWSSecretsRegion() string {
 
 // getValueFromAWSSecretsManager returns a Parameter value from the AWS Secrets Manager
 func getValueFromAWSSecretsManager(param Parameter) interface{} {
-	if param.AWSSecret {
+	if param.Options.SecretsManagerEnable {
 		if sm != nil && smError == nil {
-			value, _, err := sm.GetValue(param.Name)
-			if err == nil {
-				return convertString(value, param.valueType)
+			name := param.Name
+
+			if param.Options.StageSensitive {
+				if stage, ok := defaultParams.result[StageParameter]; ok {
+					nameWithStage := fmt.Sprintf("%v_%v", name, stage)
+					value, _, err := sm.GetValue(nameWithStage)
+					if err == nil {
+						return convertString(value, param.valueType)
+					}
+				}
+			} else {
+				if stage, ok := defaultParams.result[StageParameter]; ok {
+					nameWithStage := fmt.Sprintf("%v_%v", name, stage)
+					value, _, err := sm.GetValue(nameWithStage)
+					if err == nil {
+						return convertString(value, param.valueType)
+					}
+				}
+				value, _, err := sm.GetValue(name)
+				if err == nil {
+					return convertString(value, param.valueType)
+				}
 			}
 		}
 	}
@@ -108,16 +137,23 @@ func getValueFromFlag(flg *flag.Flag, typeValue string) (interface{}, bool) {
 		{
 			return flg.Value.(*flags.Uint64Value).Get(), flg.Value.(*flags.Uint64Value).IsSet()
 		}
+	case databaseType:
+		{
+			return flg.Value.(*flags.DatabaseValue).Get(), flg.Value.(*flags.DatabaseValue).IsSet()
+		}
 	}
 
 	return nil, false
 }
 
-// isAWSSecret returns is AWS Secrets Manager argument was provided
-func isAWSSecret(awsSecret []bool) bool {
-	isAwsSecret := false
-	if len(awsSecret) > 0 && awsSecret[0] == true {
-		isAwsSecret = true
+func parseOptions(awsSecret []Options) Options {
+	options := Options{}
+
+	lenOptions := len(awsSecret)
+
+	if lenOptions > 0 {
+		options = awsSecret[0]
 	}
-	return isAwsSecret
+
+	return options
 }

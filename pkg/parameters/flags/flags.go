@@ -1,23 +1,34 @@
-//Package flags is a wrapper for the default flag package. All types and functions allow checking if a flag was set.
+// Package flags is a wrapper for the default flag package. All types and functions allow checking if a flag was set.
 //
-//Example:
+// Example:
 //
-//flags.Bool("local", false, "")
+// flags.Bool("local", false, "")
 //
-//flag.Parse()
+// flag.Parse()
 //
-//flag.Lookup("local").Value.(*flags.IntType).IsSet()
+// flag.Lookup("local").Value.(*flags.IntType).IsSet()
 package flags
 
 import (
 	"errors"
 	"flag"
 	"strconv"
+
+	"github.com/barchart/common-go/pkg/configuration/database"
 )
 
 // Bool defines a bool flag with specified name, default value, and usage string.
 func Bool(name string, value bool, usage string) {
 	v := BoolValue{
+		set:   false,
+		value: value,
+	}
+	flag.Var(&v, name, usage)
+}
+
+// Bool defines a database flag with specified name, default value, and usage string.
+func Database(name string, value database.Database, usage string) {
+	v := DatabaseValue{
 		set:   false,
 		value: value,
 	}

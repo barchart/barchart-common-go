@@ -8,4 +8,10 @@ The `logger` package is a wrapper over [logrus](https://github.com/sirupsen/logr
 
 ### How to run  
 
+You can run the example by following commands:
+
+> make run
+
+or 
+
 > go run main.go  

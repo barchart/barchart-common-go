@@ -4,9 +4,9 @@
 
 A *public* library of shared GoLang utilities.
   
-### Overview
+## Overview
 
-#### Features 
+### Features 
   
 * [Parameters](./pkg/parameters) - Pattern for accepting program arguments (e.g. flags, environment, AWS Secrets Manager)
 * [Configuration](./pkg/configuration) - Pattern for storing configuration data (e.g. database connection)
@@ -14,14 +14,22 @@ A *public* library of shared GoLang utilities.
 * [Usage](./pkg/usage)
 * [Logger](./pkg/logger)
 
-### Development
+## Development
 
-#### Go Modules
+### Go Modules
 
-```sh
+```shell
 go get github.com/barchart/common-go
 ```
 
-#### License
+## Tests
+
+To run test use following commands: 
+
+> make test
+>
+> make test-v
+
+### License
 
 This software is provided under the MIT license.

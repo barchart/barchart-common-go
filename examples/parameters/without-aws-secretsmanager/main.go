@@ -5,16 +5,22 @@ import (
 	"github.com/barchart/common-go/pkg/parameters"
 )
 
+// go run main.go --STAGE=DEV
+//
+// go run main.go --STAGE=DEV --HOST="some host" --PORT=1234 --DATABASE=database_name --LOCAL=true
+//
+// STAGE=DEV go run main.go --HOST="some host" --PORT=1234 --DATABASE=database_name --LOCAL=true
+
 var log = logger.Log
 
 func main() {
 	// Defining parameters
 	// params.Add() is the alias to params.AddString()
-	parameters.Add("STAGE", "dev", "", false)
-	parameters.AddString("HOST", "", "", true)
-	parameters.AddInt("PORT", 5432, "", false)
-	parameters.Add("DATABASE", "", "", false)
-	parameters.AddBool("LOCAL", false, "", true)
+	parameters.Add("STAGE", "DEV", "A stage parameter.", true)
+	parameters.AddString("HOST", "", "A host of database", false)
+	parameters.AddInt("PORT", 5432, "A port of database", false)
+	parameters.Add("DATABASE", "", "A name of database", false)
+	parameters.AddBool("LOCAL", false, "Run application locally", false)
 
 	// Parse all parameters. Will get value from flags, environment variables and AWS Secrets Manager.
 	// parameters.Parse executes flag.Parse() under the hood. DON'T USE flag.parse()
@@ -26,7 +32,6 @@ func main() {
 	local = myParams["LOCAL"].(bool)
 	log.Println("Assigns a parameter to a variable")
 	log.Printf("LOCAL: %v \n", local)
-	log.Println("")
 
 	log.Println("Reads all parameter using for ... range:")
 	log.Println("_______________")

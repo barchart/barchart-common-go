@@ -1,8 +1,6 @@
 package flags
 
-import (
-	"strconv"
-)
+import "strconv"
 
 type BoolValue struct {
 	set   bool

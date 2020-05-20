@@ -1,9 +1,10 @@
 package configuration
 
 import (
+	"testing"
+
 	"github.com/barchart/common-go/pkg/configuration/database"
 	. "github.com/smartystreets/goconvey/convey"
-	"testing"
 )
 
 func TestConfig(t *testing.T) {
@@ -30,13 +31,13 @@ func TestDatabase(t *testing.T) {
 				Host:     "development.com",
 				Port:     5432,
 				Database: "database",
-				User:     "test",
+				Username: "test",
 				Password: "12345",
 			}
 		)
 
 		Convey("Set Database", func() {
-			setErr := SetDB(key, expectedDB.Provider, expectedDB.Host, expectedDB.Port, expectedDB.Database, expectedDB.User, expectedDB.Password)
+			setErr := SetDatabaseProperties(key, expectedDB.Provider, expectedDB.Host, expectedDB.Port, expectedDB.Database, expectedDB.Username, expectedDB.Password)
 			So(setErr, ShouldBeNil)
 		})
 
