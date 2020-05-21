@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/barchart/common-go/pkg/configuration/database"
 	"github.com/barchart/common-go/pkg/parameters/flags"
@@ -81,7 +82,7 @@ func getValueFromAWSSecretsManager(param Parameter) interface{} {
 
 			if param.Options.StageSensitive {
 				if stage, ok := defaultParams.result[StageParameter]; ok {
-					nameWithStage := fmt.Sprintf("%v_%v", name, stage)
+					nameWithStage := fmt.Sprintf("%v_%v", name, strings.ToUpper(stage.(string)))
 					value, _, err := sm.GetValue(nameWithStage)
 					if err == nil {
 						return convertString(value, param.valueType)
@@ -89,7 +90,7 @@ func getValueFromAWSSecretsManager(param Parameter) interface{} {
 				}
 			} else {
 				if stage, ok := defaultParams.result[StageParameter]; ok {
-					nameWithStage := fmt.Sprintf("%v_%v", name, stage)
+					nameWithStage := fmt.Sprintf("%v_%v", name, strings.ToUpper(stage.(string)))
 					value, _, err := sm.GetValue(nameWithStage)
 					if err == nil {
 						return convertString(value, param.valueType)
