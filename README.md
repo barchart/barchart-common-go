@@ -4,18 +4,18 @@
 
 A *public* library of shared GoLang utilities.
   
-## Overview
+### Overview
 
-### Features 
+#### Features 
   
 * [Parameters](./pkg/parameters) - Pattern for accepting program arguments (e.g. flags, environment, AWS Secrets Manager).
 * [Configuration](./pkg/configuration) - Pattern for storing configuration data (e.g. database connection).
 * [Usage](./pkg/usage) - Utility to print usage (e.g. commands and arguments) for a program.
 * [Logger](./pkg/logger) - Basic logging strategy.
 
-## Development
+### Development
 
-### Go Modules
+#### Go Modules
 
 Install dependencies as follows:
 
@@ -23,7 +23,7 @@ Install dependencies as follows:
 go mod download
 ```
 
-## Unit Tests
+#### Unit Tests
 
 Execute unit test as follows:
 
