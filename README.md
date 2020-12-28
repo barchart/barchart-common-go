@@ -23,7 +23,7 @@ Install dependencies as follows:
 
 Release new code as follows:
 
-* Add a new release notes file to the ```./releases``` folder,
+* Add a new file for release notes to the ```./releases``` folder,
 * Create a new tag, using the ```./tag.sh``` script, and
 * Create a [GitHub Release](https://github.com/barchart/common-go/releases), using the aforementioned release notes.
 
