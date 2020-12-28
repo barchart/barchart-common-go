@@ -15,26 +15,19 @@ A *public* library of shared [GoLang](https://golang.org/) utilities.
 
 ### Development
 
-#### Go Modules
+#### Install Dependencies
 
-Install dependencies as follows:
+Run ```go mod download``` to install dependencies.
 
-* Execute ```go mod download```
-
-Release new code as follows:
+#### Release New Code
 
 * Add a new file for release notes to the ```./releases``` folder,
 * Create a new tag, using the ```./tag.sh``` script, and
 * Create a [GitHub Release](https://github.com/barchart/common-go/releases), using the aforementioned release notes.
 
+#### Run Unit Tests
 
-#### Unit Tests
-
-Execute unit test as follows:
-
-```shell
-make test-v
-```
+Run ```make test-v``` to execute unit tests.
 
 ### License
 
