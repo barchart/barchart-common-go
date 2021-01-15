@@ -34,7 +34,8 @@ type Options struct {
 // parameters is a struct that holds the collection of Parameter
 type parameters struct {
 	collection map[string]Parameter
-	result     map[string]interface{}
+	result     Results
+	isParsed   bool
 }
 
 var (
@@ -165,75 +166,87 @@ func AddUint64(name string, value uint64, usage string, required bool, options .
 }
 
 // Parse returns map of values of all defined parameters
-func Parse() map[string]interface{} {
+func Parse() Results {
 	missing := make([]string, 0, 1)
 
-	flags.String(AwsRegionSecrets, "us-east-1", "The AWS Secrets Manager region")
-
-	if flag.Parsed() {
-		log.Panic("flags have already parsed")
-	}
-
-	flag.Parse()
-
-	configuration.SetSecretsManager(getAWSSecretsRegion())
-	smm, smmError := configuration.GetSecretsManager()
-	sm = &smm
-	smError = smmError
-
-	if defaultParams.collection == nil {
-		log.Panic("parameters wasn't added")
-	}
-
-	keys := make([]string, 0, len(defaultParams.collection))
-	isStage := false
-
-	for key := range defaultParams.collection {
-		if key != StageParameter {
-			keys = append(keys, key)
+	if !defaultParams.isParsed {
+		if flag.Parsed() {
+			log.Panic("flags have already parsed")
 		} else {
-			isStage = true
+			flags.String(AwsRegionSecrets, "us-east-1", "The AWS Secrets Manager region")
 		}
-	}
 
-	sort.Strings(keys)
+		flag.Parse()
 
-	if isStage {
-		keys = append([]string{"STAGE"}, keys...)
-	}
+		configuration.SetSecretsManager(getAWSSecretsRegion())
+		smm, smmError := configuration.GetSecretsManager()
+		sm = &smm
+		smError = smmError
 
-	for _, key := range keys {
-		param := defaultParams.collection[key]
-		flg := flag.Lookup(param.Name)
-		value, isSet := getValueFromFlag(flg, param.valueType)
+		if defaultParams.collection == nil {
+			log.Panic("parameters wasn't added")
+		}
 
-		if !isSet {
-			envValueString := os.Getenv(param.Name)
-			if envValueString != "" {
-				envValue := convertString(envValueString, param.valueType)
-				defaultParams.result[param.Name] = envValue
+		keys := make([]string, 0, len(defaultParams.collection))
+		isStage := false
+
+		for key := range defaultParams.collection {
+			if key != StageParameter {
+				keys = append(keys, key)
 			} else {
-				secretValue := getValueFromAWSSecretsManager(param)
-				if secretValue != nil {
-					defaultParams.result[param.Name] = secretValue
+				isStage = true
+			}
+		}
+
+		sort.Strings(keys)
+
+		if isStage {
+			keys = append([]string{"STAGE"}, keys...)
+		}
+
+		for _, key := range keys {
+			param := defaultParams.collection[key]
+			flg := flag.Lookup(param.Name)
+			value, isSet := getValueFromFlag(flg, param.valueType)
+
+			if !isSet {
+				envValueString := os.Getenv(param.Name)
+				if envValueString != "" {
+					envValue := convertString(envValueString, param.valueType)
+					defaultParams.result[param.Name] = envValue
 				} else {
-					if param.Required {
-						missing = append(missing, param.Name)
+					secretValue := getValueFromAWSSecretsManager(param)
+					if secretValue != nil {
+						defaultParams.result[param.Name] = secretValue
 					} else {
-						defaultParams.result[param.Name] = value
+						if param.Required {
+							missing = append(missing, param.Name)
+						} else {
+							defaultParams.result[param.Name] = value
+						}
 					}
 				}
+			} else {
+				defaultParams.result[param.Name] = value
 			}
-		} else {
-			defaultParams.result[param.Name] = value
 		}
-	}
 
-	if len(missing) > 0 {
-		log.Panicf("missing required parameters: [ %v ]", strings.Join(missing, ","))
+		if len(missing) > 0 {
+			log.Panicf("missing required parameters: [ %v ]", strings.Join(missing, ","))
+		}
+
+		defaultParams.isParsed = true
 	}
 
 	return defaultParams.result
+}
+
+func GetResults() Results {
+	return defaultParams.result
+}
+
+func IsParsed() bool {
+	return defaultParams.isParsed
 }
 
 // GetCollection returns a collection of parameters
