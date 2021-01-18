@@ -107,9 +107,9 @@ func TestMain(m *testing.M) {
 
 func TestParametersBasic(t *testing.T) {
 	Convey("Test basic functions", t, func() {
-		Convey("IsParsed", func() {
+		Convey("Parsed", func() {
 			Convey("must return true after execution of Parse() function", func() {
-				isParsed := IsParsed()
+				isParsed := Parsed()
 				So(isParsed, ShouldEqual, true)
 			})
 		})
