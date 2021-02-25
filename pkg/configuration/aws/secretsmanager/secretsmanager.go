@@ -19,17 +19,10 @@ func init() {
 	log.SetReportCaller(true)
 }
 
-// cache is a type of cache system of Secrets Manager
-type cache struct {
-	Value  string
-	isJSON bool
-}
-
 // SecretsManager is a type of AWS Secrets Manager configuration and provider
 type SecretsManager struct {
 	Region string `validate:"required"`
 	sm     *secretsmanager.SecretsManager
-	cache  map[string]cache
 }
 
 // isStringJSON returns true/false if the provided string is JSON
@@ -44,10 +37,6 @@ func New(region string) *SecretsManager {
 	secretsManager := SecretsManager{}
 	secretsManager.Region = region
 
-	if secretsManager.cache == nil {
-		secretsManager.cache = map[string]cache{}
-	}
-
 	sess, err := session.NewSession()
 
 	if err != nil {
@@ -59,18 +48,9 @@ func New(region string) *SecretsManager {
 	return &secretsManager
 }
 
-// ClearCache is clears cache of Secrets Manager
-func (secretsManager SecretsManager) ClearCache() {
-	secretsManager.cache = map[string]cache{}
-}
-
-// GetValue returns value from AWS Secrets Manager
+// GetValue returns value from AWS Secrets Manager.
+// Returns 3 variables: value, isJSON, err
 func (secretsManager SecretsManager) GetValue(secretName string) (string, bool, error) {
-	cached := secretsManager.cache[secretName]
-	if cached.Value != "" {
-		return cached.Value, cached.isJSON, nil
-	}
-
 	input := &secretsmanager.GetSecretValueInput{
 		SecretId: aws.String(secretName),
 	}
@@ -116,8 +96,8 @@ func (secretsManager SecretsManager) GetValue(secretName string) (string, bool, 
 		}
 		result = string(decodedBinarySecretBytes[:length])
 	}
+
 	isJSON = isStringJSON(result)
-	secretsManager.cache[secretName] = cache{Value: result, isJSON: isJSON}
 
 	return result, isJSON, nil
 }
