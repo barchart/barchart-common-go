@@ -35,7 +35,7 @@ type Options struct {
 type parameters struct {
 	collection map[string]Parameter
 	result     Results
-	isParsed   bool
+	parsed     bool
 }
 
 var (
@@ -68,7 +68,7 @@ func AddBool(name string, value bool, usage string, required bool, options ...Op
 	flags.Bool(name, value, usage)
 }
 
-// AddBool defines a bool Parameter with specified name, default value, and usage string.
+// AddDatabase defines a database Parameter with specified name, default value, and usage string.
 func AddDatabase(name string, value database.Database, usage string, required bool, options ...Options) {
 	defaultParams.collection[name] = Parameter{
 		Name:         name,
@@ -165,11 +165,11 @@ func AddUint64(name string, value uint64, usage string, required bool, options .
 	flags.Uint64(name, value, usage)
 }
 
-// Parse returns map of values of all defined parameters
+// Parse returns map of values of all defined parameters.
 func Parse() Results {
 	missing := make([]string, 0, 1)
 
-	if !defaultParams.isParsed {
+	if !defaultParams.parsed {
 		if flag.Parsed() {
 			log.Panic("flags have already parsed")
 		} else {
@@ -235,21 +235,23 @@ func Parse() Results {
 			log.Panicf("missing required parameters: [ %v ]", strings.Join(missing, ","))
 		}
 
-		defaultParams.isParsed = true
+		defaultParams.parsed = true
 	}
 
 	return defaultParams.result
 }
 
+// GetResults returns a result that already has been parsed.
 func GetResults() Results {
 	return defaultParams.result
 }
 
-func IsParsed() bool {
-	return defaultParams.isParsed
+// Parsed Returns true if the parse function was used.
+func Parsed() bool {
+	return defaultParams.parsed
 }
 
-// GetCollection returns a collection of parameters
+// GetCollection returns a collection of parameters.
 func GetCollection() map[string]Parameter {
 	return defaultParams.collection
 }

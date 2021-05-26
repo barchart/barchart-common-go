@@ -3,7 +3,6 @@ package configuration
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	. "github.com/barchart/common-go/pkg/configuration/aws"
 	. "github.com/barchart/common-go/pkg/configuration/aws/dynamo"
@@ -15,7 +14,6 @@ import (
 	. "github.com/barchart/common-go/pkg/configuration/database"
 	"github.com/barchart/common-go/pkg/validation"
 	_ "github.com/lib/pq"
-	"github.com/spf13/viper"
 )
 
 var stage string
@@ -34,41 +32,6 @@ func newConfig() *Config {
 		CustomSettings: map[string]interface{}{},
 		Stage:          "",
 	}
-}
-
-// InitConfigFromFile reads configuration from file and return config
-func InitConfigFromFile(path string, name string) (*Config, error) {
-	return config.initConfigFromFile(path, name)
-}
-
-func (cfg *Config) initConfigFromFile(path string, name string) (*Config, error) {
-	vip := viper.New()
-	vip.AddConfigPath(path)
-	vip.SetConfigName(name)
-
-	stage = os.Getenv("APP_ENV")
-
-	if stage == "" {
-		stage = "dev"
-	}
-
-	err := vip.ReadInConfig()
-
-	if err != nil {
-		errText := fmt.Sprintf("unable to read config file, %v", err)
-		return nil, errors.New(errText)
-	}
-
-	err = vip.UnmarshalKey(stage, &cfg)
-
-	if err != nil {
-		errText := fmt.Sprintf("unable to decode into config struct, %v", err)
-		return nil, errors.New(errText)
-	}
-
-	cfg.Stage = stage
-
-	return cfg, nil
 }
 
 // region Singleton Getters
